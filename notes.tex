@@ -4,10 +4,16 @@
 %\subsection{Results/Evaluation}
 %\subsection{Limitations/My Comments}
 %\newpage
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=\linewidth]{xx.png} %
+%    \caption{xx's arch.}	
+%    \label{fig:xx}
+%\end{figure}
 \documentclass[]{article} %twocolumn
 %\usepackage{ctex}
 \usepackage{titlesec}
-\titleformat*{\section}{\large\bfseries} %\tiny\scriptsize\footnotesize\small\normalsize\large\Large\LARGE\huge\Huge
+\titleformat*{\section}{\normalfont\bfseries} %\tiny\scriptsize\footnotesize\small\normalsize\large\Large\LARGE\huge\Huge
 \titleformat*{\subsection}{\normalfont\bfseries}
 \usepackage{graphicx}
 \usepackage{url}
@@ -23,21 +29,18 @@
 
 \title{\textbf{Reading Notes of Recent Papers}}%文献阅读笔记
 \author{\texttt{TSIS Lab.} (Trusted Software and Intelligent System Lab.)}
-\date{2020/01/21} %如果没有这行将显示当前时间, 如果不想显示时间则使用 \date{}
+\date{2020/01/21}
 
 \begin{document}
 
-\maketitle     %生成标题, 包括 \title \author \date
-\tableofcontents  %生成目录
+\maketitle 
+\tableofcontents
 \clearpage
 
 \twocolumn
 \section{SAVIOR: Towards Bug-Driven Hybrid Testing @S\&P'20
 }
 \subsection{Background/Problems}
-%\subsection{Methods/Techniques}
-%\subsection{Results/Evaluation}
-%\subsection{My Comments}
 Hybrid testing combines fuzzing and concolic
 execution. It leverages fuzzing to test easy-to-reach code
 regions and uses concolic execution to explore code blocks
@@ -56,7 +59,7 @@ reaching a chunk of code, rather than examining the hidden
 defects inside. It may frequently \textbf{miss subtle vulnerabilities}
 despite that it has already explored the vulnerable code paths.
 \subsection{Methods/Techniques}
-We propose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framework pioneering
+The authorspropose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framework pioneering
 a bug-driven principle.
 
 \textbf{Bug-driven prioritization:} Instead of running all seeds without
@@ -89,7 +92,7 @@ is infeasible on this path, regardless of the input.
 
 \subsection{Results/Evaluation %评估效果
 }
-Our evaluation shows that the bug-driven approach outperforms mainstream
+Evaluation shows that the bug-driven approach outperforms mainstream
  hybrid testing systems driven by code coverage. On average, SAVIOR
 detects vulnerabilities 43.4\% faster than DRILLER and 44.3\%
 faster than QSYM, leading to the discovery of 88 and 76 more
@@ -103,7 +106,7 @@ triggers 481 UBSAN violations, among which 243 are real bugs.}
 to label vulnerabilities where the over-approximation may
 introduce many false-positive labels. This imprecision can
 consequently weaken the performance of SAVIOR's prioritization. 
-We plan to include more precise
+One solution is to include more precise
 static analysis for finer-grained label pruning.
     \item Prediction in Vulnerability Detection: Once reaching a
 potentially vulnerable location in concolic execution,
@@ -134,7 +137,7 @@ between a file system image and file operations;
 irreproducible bugs.
 
 \subsection{Methods/Techniques}
-we present JANUS (Fig.\ref{fig:janus}, 120K C++/C LoC), the first feedback-driven fuzzer
+The authors present JANUS (Fig.\ref{fig:janus}, 120K C++/C LoC), the first feedback-driven fuzzer
 that explores the two-dimensional input space of a file system,
 i.e., mutating metadata on a large image, while emitting image-directed
 file operations. In addition, JANUS relies on a library
@@ -148,7 +151,7 @@ reproducibility of bugs.
     \label{fig:janus}
 \end{figure}
 \subsection{Results/Evaluation}
-We evaluate JANUS on 8 file systems
+The authors evaluate JANUS on 8 file systems
 and found 90 bugs in the upstream Linux kernel, 62 of which have
 been acknowledged. 43 bugs have been fixed with 32
 CVEs assigned. In addition, JANUS achieves higher code coverage
@@ -180,6 +183,7 @@ that rely on FUSE (Filesystem in Userspace).
     their approaches.
 \end{itemize}
 \newpage
+
 \section{REDQUEEN: Fuzzing with Input-to-State Correspondence @NDSS'19}
 \subsection{Background/Problems}
 Two common problems of fuzzing are magic numbers
@@ -203,8 +207,32 @@ if(u64(input)==sum(input+8, len-8))
       bug(2);
 \end{lstlisting}
 
+Bonus:
+Fuzzers from the AFL family have three important components:
+(i) the queue, (ii) the bitmap, and (iii) the mutators. The queue
+is where all inputs are stored. During the fuzzing process,
+an input is picked from the queue, fuzzed for a while, and,
+eventually, returned to the queue. After picking one input, the
+mutators perform a series of mutations. After each step, the
+mutated input is executed. The target is instrumented such that
+the coverage produced by the input is written into a bitmap. If
+the input triggered new coverage (and, therefore, a new bit
+is set in the bitmap), the input is appended to the queue.
+Otherwise, the mutated input is discarded. The mutators are
+organized in different stages. The first stages are called the
+\emph{deterministic stages}. These stages are applied once, no matter
+how often the input is picked from the queue. They consist
+of a variety of simple mutations such as “try flipping each
+bit”. When the deterministic stages are finished or an input
+is picked for the second time, the so called \emph{havoc phase} is
+executed. During this phase, multiple random mutations are
+applied at the same time at random locations. Similarly, if the
+user provided a dictionary with interesting strings, they are
+added in random positions. Linked to the havoc stage is the
+\emph{splicing stage}, in which two different inputs are combined at
+a random position.
 \subsection{Methods/Techniques}
-We introduce a lightweight, yet very effective
+The authors introduce a lightweight, yet very effective
 approach to facilitate
 and optimize state-of-the-art feedback fuzzing that easily scales
 to large binary applications and unknown environments. We
@@ -213,21 +241,22 @@ of the input often end up directly (i.e., nearly unmodified)
 in the program state. This \emph{input-to-state correspondence} can
 be exploited to create a robust method to overcome common
 fuzzing roadblocks in a highly effective and efficient manner.
-Our prototype implementation, called REDQUEEN, is able to
+Their prototype implementation, called REDQUEEN, is able to
 solve magic bytes and (nested) checksum tests automatically
-for a given binary executable. Additionally, we show that our
+for a given binary executable. Additionally, The authors show that the
 techniques outperform various state-of-the-art tools on a wide
 variety of targets across different privilege levels (kernel-space
 and userland) with no platform-specific code.
 \subsection{Results/Evaluation}
-REDQUEEN (\url{https://github.com/RUB-SysSec/redqueen}) is the
+REDQUEEN is the
 first method to find more than 100\% of the bugs planted in
-LAVA-M across all targets. Furthermore, we were able to discover
+LAVA-M across all targets. Furthermore, The authors discovered
 65 new bugs and obtained 16 CVEs in multiple programs and
-OS kernel drivers. Finally, our evaluation demonstrates that
+OS kernel drivers. Finally, their evaluation demonstrates that
 REDQUEEN is fast, widely applicable and outperforms concurrent
 approaches by up to three orders of magnitude.
 
+Available at: \url{https://github.com/RUB-SysSec/redqueen}
 \subsection{Limitations/My Comments}
 \begin{itemize}
     \item REDQUEEN cannot deal with those cases in which the input does not correspond to the state, such as compression or hash maps in the input.
@@ -235,4 +264,105 @@ approaches by up to three orders of magnitude.
 lightweight approach as a first step where possible, and than
 solve the remaining challenges using complex approaches.
 \end{itemize}
+\newpage
+
+\section{GRIMOIRE: Synthesizing Structure while Fuzzing @Security'19 }
+\subsection{Background/Problems}
+One common challenge for current fuzzing techniques are programs which process highly structured input languages such as interpreters, compilers, text-based network protocols or markup languages. Typically, such inputs are consumed by the program in two stages: parsing and semantic analysis. If parsing of the input fails, deeper parts of the target program—containing the actual application logic—fail to execute; hence, bugs hidden “deep” in the code cannot be reached. Even advanced feedback fuzzers— such as AFL—are typically unable to produce diverse sets of syntactically valid inputs.
+
+Previous approaches to address this problem are typically based on manually provided grammars or seed corpora. On the downside, such methods require human experts to (often manually) specify the grammar or suitable seed corpora, which becomes next to impossible for applications with undocumented or proprietary input specifications. An orthogonal line of work tries to utilize advanced program analysis techniques to automatically infer grammars. Typically performed as a pre-processing step, such methods are used for generating a grammar that guides the fuzzing process. However, since this grammar is treated as immutable, no additional learning takes place during the actual fuzzing run.
+
+\subsection{Methods/Techniques}
+The authors present the design and implementation of GRIMOIRE, a fully automated coverage-guided fuzzer which works without any form of human interaction or pre-configuration; yet, it is still able to efficiently test programs that expect highly structured inputs. Thet achieve this by performing large-scale mutations in the program input space using grammar-like combinations to synthesize new highly structured inputs without any pre-processing step. 
+
+ Their approach is based on two key observations: First, they can use code coverage feedback to automatically infer structural properties of the input language. Second, the precise and “correct” grammars generated by previous approaches are actually unnecessary in practice: since fuzzers have the virtue of high test case throughput, they can deal with a significant amount of noise and imprecision. In fact, in some programs (such as Boolector) with a rather diverse set of input languages, the additional noise even benefits the fuzz testing. In a similar vein, there are often program paths which can only be accessed by inputs outside of the formal specifications, e. g., due to incomplete or imprecise implementations or error handling code.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{grimoire.png} %
+    \caption{Advantage of Grimoire.}	
+    \label{fig:janus}
+\end{figure}
+\subsection{Results/Evaluation}
+ First, The authors evaluate GRIMOIRE against other fuzzers on four scripting language interpreters (mruby, PHP, Lua and JavaScriptCore), a compiler (TCC), an assembler (NASM), a database (SQLite), a parser (libxml) and an SMT solver (Boolector).  GRIMOIRE outperforms all existing coverage-guided fuzzers; in the case of Boolector, GRIMOIRE finds up to 87\% more coverage than the baseline (REDQUEEN). 
+
+ Second, they evaluate GRIMOIRE against state-of-the-art grammar-based fuzzers. they observe that in situations where an input specification is available, it is advisable to use GRIMOIRE in addition to a grammar fuzzer to further increase the test coverage found by grammar fuzzers.
+ 
+ Third, they evaluate GRIMOIRE against current state-of-the-art approaches that use automatically inferred grammars for fuzzing and found that they can significantly outperform such approaches. Overall, GRIMOIRE found 19 distinct memory corruption bugs that they manually verified. they responsibly disclosed all of them to the vendors and obtained 11 CVEs. During their evaluation, the next best fuzzer only found 5 of these bugs. In fact, GRIMOIRE found more bugs than all five other fuzzers combined.
+ 
+ Available at: \url{https://github.com/RUB-SysSec/grimoire}
+\subsection{Limitations/My Comments}
+The approach has significant difficulties with more syntactically complex constructs, such as matching the ID of opening and closing tags in XML or identifying variable constructs in scripting languages. 
+
+The generalization approach might be too coarse in many places. Obtaining more precise rules would help uncovering deeper parts of the target application in cases where multiple valid statements have to be produced. 
+\newpage
+\section{Intriguer: Field-Level Constraint Solving for Hybrid Fuzzing @CCS'19}
+\subsection{Background/Problems}
+Hybrid fuzzing is promising in light of the recent performance improvements in concolic engines. However, there is room for further improvement: symbolic emulation is still slow, unnecessary constraints dominate solving time, resources are overly allocated, and hard-to-trigger bugs are missed.
+
+\subsection{Methods/Techniques}
+The authors present a new hybrid fuzzer named Intriguer (Fig.\ref{fig:intriguer}). The key idea of Intriguer is field-level constraint solving, which optimizes symbolic execution with field-level knowledge. Intriguer performs instruction-level taint analysis and records execution traces without data transfer instructions like mov. Intriguer then reduces the execution traces for tainted instructions that accessed a wide range of input bytes, and infers input fields to build field transition trees. With these optimizations, Intriguer can efficiently perform symbolic emulation for more relevant instructions and invoke a solver for complicated constraints only.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{intriguer.png} %
+    \caption{Intriguer's arch.}	
+    \label{fig:intriguer}
+\end{figure}
+\subsection{Results/Evaluation}
+Evaluation results indicate that Intriguer outperforms the state-of-the-art fuzzers: Intriguer found all the bugs in the LAVA-M(5h) benchmark dataset for ground truth performance, and also discovered 43 new security bugs in seven real-world programs. They reported the bugs and received 23 new CVEs.
+
+\subsection{Limitations/My Comments}
+ Intriguer performed field inference by inspecting off sets recorded in the execution traces and did not consider the association between those fields.  To perform field-level constraint solving more efficiently, Intriguer should identify fields of the same type through the FL and grouping them together. In addition to identifying repeated fields, we may infer structure from those fields and then consider mutation strategies specific to repeated fields based on it.
+
+Intriguer reduces the execution traces to emulate only the small portion of the instructions that are repeatedly used to access a wide range of input bytes. One may have two concerns regarding trace reduction. First, excessively reduced traces may affect a constraint solving for important branches. By considering the context-sensitivity of the run-time process, Intriguer will not perform trace reduction when a program is in a different context (e.g., different call stack). Second, the instructions can be repeatedly used to access only a narrow range of input bytes. Note that an execution bottleneck can also occur if the instructions are used to repetitively access the input with specific offsets. We can address this problem by reducing the execution traces for the instructions that use the same offset by considering the program’s context.
+
+Intriguer currently supports most of the x86 instruction set and a part of x86\_64 instruction set. Although it is challenging to support all of x86\_64 instructions, we can implement frequently used instructions to support actual program execution.
+
+The current version of Intriguer does not consider the control-flow dependency, e.g., occurring from indirect
+and conditional jump.
+\newpage
+
+\section{FIRM-AFL: High-Throughput Greybox Fuzzing of IoT Firmware via Augmented Process Emulation @Sec'19}
+\subsection{Background/Problems}
+Two fundamental problems in \emph{IoT fuzzing} due to its strong dependency on the actual
+hardware configuration:
+1) Compatibility issues by enabling fuzzing for
+POSIX-compatible firmware that can be emulated in a system
+emulator. 2) Performance bottleneck
+caused by system-mode emulation. 
+\subsection{Methods/Techniques}
+A novel technique
+called augmented process emulation. By combining system-
+mode emulation  (high generality and low
+efficiency)  and user-mode emulation  (low generality and
+high efficiency) in a novel way,
+augmented process emulation provides high compatibility as
+system-mode emulation and high throughput as user-mode
+emulation.  The program to be fuzzed is mainly
+run in user-mode emulation to achieve high efficiency, and
+switches to full system emulation only when necessary to
+ensure correct program execution. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{firm-afl.png} %
+    \caption{firm-afl's arch.}	
+    \label{fig:firmafl}
+\end{figure}
+\subsection{Results/Evaluation}
+Evaluation results show that (1) FIRM-AFL is
+fully functional and capable of finding real-world vulnerabili-
+ties in IoT programs; (2) the throughput of FIRM-AFL is on
+average 8.2 times higher than system-mode emulation based
+fuzzing; and (3) FIRM-AFL can find 1-day vulnerabili-
+ties much faster than system-mode emulation based fuzzing,
+and find 0-day vulnerabilities.
+
+available at \url{https://github.com/zyw-200/FirmAFL}.
+
+\subsection{Limitations/My Comments}
+FIRM-AFL only supports the following CPU ar-
+chitectures: mipsel, mipseb and armel.
+It can also only fuzz a program in a firmware image that can be properly emulated
+by Firmadyne and runs a POSIX-compatible OS (e.g., Linux).
+\newpage
 \end{document}
