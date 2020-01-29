@@ -2,7 +2,7 @@
 %\subsection{Background/Problems}
 %\subsection{Methods/Techniques}
 %\subsection{Results/Evaluation}
-%\subsection{Limitations/My Comments}
+%\subsection{Limitations/Comments}
 %\newpage
 %\begin{figure}[h]
 %    \centering
@@ -10,25 +10,52 @@
 %    \caption{xx's arch.}	
 %    \label{fig:xx}
 %\end{figure}
-\documentclass[]{article} %twocolumn
+\documentclass[10pt]{article} %twocolumn
 %\usepackage{ctex}
 \usepackage{titlesec}
+\usepackage{titletoc}
 \titleformat*{\section}{\normalfont\bfseries} %\tiny\scriptsize\footnotesize\small\normalsize\large\Large\LARGE\huge\Huge
 \titleformat*{\subsection}{\normalfont\bfseries}
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{listings}
-\usepackage[a4paper,margin=2cm]{geometry}
-%\geometry{a4paper,left=2cm,right=2cm,top=1cm,bottom=1cm}
-%\special{papersize=5in,8in} %dvi 没有纸张大小的概念，只有转换成 .ps、.pdf 文件时，才由对应的输出驱动（如 Dvips、dvipdfmx 或 pdfTeX 等）设置输出纸张大小。
-%传统的 TeX 代码里面本身不能直接设置纸大小，因此才需要在安装 TeX Live 时选择那些输出驱动的默认纸张大小。而 article 等文档类的 a4paper、letterpaper 选项，只是设置合适的版心位置和距离，以适合这些纸张大小。
-%不过，在 TeX 代码里面用特定输出驱动的 special 命令，可以提示这些输出驱动选择纸张，一般用 geometry 宏包的话，就会处理这个问题。而 graphics 宏包后台对 pdfTeX 也有相应的代码（在 pdftex.def 中）。
+\usepackage[colorlinks,linkcolor=black,anchorcolor=blue,citecolor=green]{hyperref}%
+%for pdftex
+%\setlength{\pdfpageheight}{160mm}
+%\setlength{\pdfpagewidth}{80mm}
+
+%for dvipdfm
+%\special{pdf: pagesize width 80mm height 160mm}
+
 %\setcounter{secnumdepth}{3}		%编号深度
 \setcounter{tocdepth}{1}		%目录深度
+\titlecontents{section}[0mm]%标签距离页面左边距
+{\footnotesize}
+%{\fontsize{10pt}{10pt}} %\selectfont
+{\contentslabel{1em}}  %标签距离目录内容距离
+{}
+{\titlerule*{.}\contentspage}[\addvspace{.5pc}]
 
 
-\title{\textbf{Reading Notes of Recent Papers}}%文献阅读笔记
-\author{\texttt{TSIS Lab.} (Trusted Software and Intelligent System Lab.)}
+\let\phone=1 %-------------生成适合手机上阅读的pdf文件；否则注释此行。------------------
+\ifx\phone1
+\usepackage[centering,margin=0.5cm]{geometry}
+\geometry{papersize={12cm,20cm}} 
+\else
+\usepackage[a4paper,margin=2cm]{geometry}%,left=2cm,right=2cm,top=1cm,bottom=1cm
+\twocolumn
+\fi
+
+
+%for dvips
+%\special{papersize=80mm,160mm} %dvi 没有纸张大小的概念，只有转换成 .ps、.pdf 文件时，才由对应的输出驱动（如 Dvips、dvipdfmx 或 pdfTeX 等）设置输出纸张大小。
+%传统的 TeX 代码里面本身不能直接设置纸大小，因此才需要在安装 TeX Live 时选择那些输出驱动的默认纸张大小。而 article 等文档类的 a4paper、letterpaper 选项，只是设置合适的版心位置和距离，以适合这些纸张大小。
+%不过，在 TeX 代码里面用特定输出驱动的 special 命令，可以提示这些输出驱动选择纸张，一般用 geometry 宏包的话，就会处理这个问题。而 graphics 宏包后台对 pdfTeX 也有相应的代码（在 pdftex.def 中）。
+
+
+\title{\textbf{Reading Notes}}%文献阅读笔记
+\author{\texttt{TSISers} 
+    \\ \copyright Trusted Software and Intelligent System Lab.}
 \date{2020/01/21}
 
 \begin{document}
@@ -37,9 +64,11 @@
 \tableofcontents
 \clearpage
 
-\twocolumn
+
+
 \section{SAVIOR: Towards Bug-Driven Hybrid Testing @S\&P'20
 }
+
 \subsection{Background/Problems}
 Hybrid testing combines fuzzing and concolic
 execution. It leverages fuzzing to test easy-to-reach code
@@ -47,8 +76,8 @@ regions and uses concolic execution to explore code blocks
 guarded by complex branch conditions. As a result, hybrid testing
 is able to reach deeper into program state space than fuzz
 testing or concolic execution alone. Recently, hybrid testing has
-seen significant advancement. However, \textbf{its code coverage-centric
-design is inefficient in vulnerability detection}. First, it \textbf{blindly}
+seen significant advancement. However, {its code coverage-centric
+design is inefficient in vulnerability detection}. First, it {blindly}
 selects seeds for concolic execution and aims to explore new code
 continuously. However, as statistics show, a large portion of the
 explored code is often bug-free. Therefore, giving equal attention
@@ -56,22 +85,22 @@ to every part of the code during hybrid testing is a non-optimal
 strategy. It slows down the detection of real vulnerabilities by
 over 43\%. Second, classic hybrid testing quickly moves on after
 reaching a chunk of code, rather than examining the hidden
-defects inside. It may frequently \textbf{miss subtle vulnerabilities}
+defects inside. It may frequently {miss subtle vulnerabilities}
 despite that it has already explored the vulnerable code paths.
 \subsection{Methods/Techniques}
-The authorspropose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framework pioneering
+The authors propose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framework pioneering
 a bug-driven principle.
 
 \textbf{Bug-driven prioritization:} Instead of running all seeds without
 distinction in concolic execution, SAVIOR prioritizes
 those that have higher possibilities of leading to vulnerabilities.
 Specifically, before the testing, SAVIOR analyzes the source
-code and \textbf{statically labels the potentially vulnerable locations}
+code and {statically labels the potentially vulnerable locations}
 in the target program.
 Moreover, SAVIOR computes the set of basic blocks reachable
-from each branch. During dynamic testing, SAVIOR \textbf{prioritizes the concolic execution seeds that can visit more
+from each branch. During dynamic testing, SAVIOR {prioritizes the concolic execution seeds that can visit more
 important branches} (i.e., branches whose reachable code has
-more vulnerability labels).
+more vulnerability labels).  
 
 \textbf{Bug-guided verification: }Aside from accelerating vulnerability
 detection, SAVIOR also verifies the labeled vulnerabilities
@@ -83,12 +112,13 @@ SAVIOR solves the constraint to construct a test input as
 the proof. Otherwise, SAVIOR proves that the vulnerability
 is infeasible on this path, regardless of the input.
 
-\begin{figure*}[t]
+\begin{figure}[h]
     \centering
-    \includegraphics[scale=0.9]{savior.png} %
+    \includegraphics[width=\linewidth]{savior.png} %
     \caption{SAVIOR's arch.}	
     \label{fig:savior}
-\end{figure*}
+\end{figure}
+
 
 \subsection{Results/Evaluation %评估效果
 }
@@ -96,11 +126,11 @@ Evaluation shows that the bug-driven approach outperforms mainstream
  hybrid testing systems driven by code coverage. On average, SAVIOR
 detects vulnerabilities 43.4\% faster than DRILLER and 44.3\%
 faster than QSYM, leading to the discovery of 88 and 76 more
-unique bugs, respectively. According to the \textbf{evaluation on 11 well
+unique bugs, respectively. According to the {evaluation on 11 well
 fuzzed benchmark programs, within the first 24 hours, SAVIOR
 triggers 481 UBSAN violations, among which 243 are real bugs.}
 
-\subsection{Limitations/My Comments}
+\subsection{Limitations/Comments}
 \begin{itemize}
     \item Over-approximation in Vulnerability Labeling: SAVIOR leverages sound algorithms
 to label vulnerabilities where the over-approximation may
@@ -160,7 +190,7 @@ with the state-of-the-art fuzzer Syzkaller.
 JANUS visits 4.19X and 2.01X more code paths in Btrfs and ext4,
 respectively. Moreover, JANUS is able to reproduce 88–100\% of
 the crashes, while Syzkaller fails on all of them.
-\subsection{Limitations/My Comments}
+\subsection{Limitations/Comments}
 \begin{itemize}
     \item JANUS cannot fuzz the DAX mode of a file system without modification on LKL. 
     \item To achieve a minimal PoC, JANUS uses a brute force approach to revert
@@ -207,30 +237,6 @@ if(u64(input)==sum(input+8, len-8))
       bug(2);
 \end{lstlisting}
 
-Bonus:
-Fuzzers from the AFL family have three important components:
-(i) the queue, (ii) the bitmap, and (iii) the mutators. The queue
-is where all inputs are stored. During the fuzzing process,
-an input is picked from the queue, fuzzed for a while, and,
-eventually, returned to the queue. After picking one input, the
-mutators perform a series of mutations. After each step, the
-mutated input is executed. The target is instrumented such that
-the coverage produced by the input is written into a bitmap. If
-the input triggered new coverage (and, therefore, a new bit
-is set in the bitmap), the input is appended to the queue.
-Otherwise, the mutated input is discarded. The mutators are
-organized in different stages. The first stages are called the
-\emph{deterministic stages}. These stages are applied once, no matter
-how often the input is picked from the queue. They consist
-of a variety of simple mutations such as “try flipping each
-bit”. When the deterministic stages are finished or an input
-is picked for the second time, the so called \emph{havoc phase} is
-executed. During this phase, multiple random mutations are
-applied at the same time at random locations. Similarly, if the
-user provided a dictionary with interesting strings, they are
-added in random positions. Linked to the havoc stage is the
-\emph{splicing stage}, in which two different inputs are combined at
-a random position.
 \subsection{Methods/Techniques}
 The authors introduce a lightweight, yet very effective
 approach to facilitate
@@ -254,16 +260,40 @@ LAVA-M across all targets. Furthermore, The authors discovered
 65 new bugs and obtained 16 CVEs in multiple programs and
 OS kernel drivers. Finally, their evaluation demonstrates that
 REDQUEEN is fast, widely applicable and outperforms concurrent
-approaches by up to three orders of magnitude.
-
-Available at: \url{https://github.com/RUB-SysSec/redqueen}
-\subsection{Limitations/My Comments}
+approaches by up to three orders of magnitude. Available at: \url{https://github.com/RUB-SysSec/redqueen}
+\subsection{Limitations/Comments}
 \begin{itemize}
     \item REDQUEEN cannot deal with those cases in which the input does not correspond to the state, such as compression or hash maps in the input.
     \item It would be beneficial to use this
 lightweight approach as a first step where possible, and than
 solve the remaining challenges using complex approaches.
 \end{itemize}
+
+\subsection*{Core design of AFL}
+\hspace{2mm}{
+Fuzzers from the AFL family have three important components:
+(i) the queue, (ii) the bitmap, and (iii) the mutators. The queue
+is where all inputs are stored. During the fuzzing process,
+an input is picked from the queue, fuzzed for a while, and,
+eventually, returned to the queue. After picking one input, the
+mutators perform a series of mutations. After each step, the
+mutated input is executed. The target is instrumented such that
+the coverage produced by the input is written into a bitmap. If
+the input triggered new coverage (and, therefore, a new bit
+is set in the bitmap), the input is appended to the queue.
+Otherwise, the mutated input is discarded. The mutators are
+organized in different stages. The first stages are called the
+\emph{deterministic stages}. These stages are applied once, no matter
+how often the input is picked from the queue. They consist
+of a variety of simple mutations such as “try flipping each
+bit”. When the deterministic stages are finished or an input
+is picked for the second time, the so called \emph{havoc phase} is
+executed. During this phase, multiple random mutations are
+applied at the same time at random locations. Similarly, if the
+user provided a dictionary with interesting strings, they are
+added in random positions. Linked to the havoc stage is the
+\emph{splicing stage}, in which two different inputs are combined at
+a random position.}
 \newpage
 
 \section{GRIMOIRE: Synthesizing Structure while Fuzzing @Security'19 }
@@ -290,7 +320,7 @@ The authors present the design and implementation of GRIMOIRE, a fully automated
  Third, they evaluate GRIMOIRE against current state-of-the-art approaches that use automatically inferred grammars for fuzzing and found that they can significantly outperform such approaches. Overall, GRIMOIRE found 19 distinct memory corruption bugs that they manually verified. they responsibly disclosed all of them to the vendors and obtained 11 CVEs. During their evaluation, the next best fuzzer only found 5 of these bugs. In fact, GRIMOIRE found more bugs than all five other fuzzers combined.
  
  Available at: \url{https://github.com/RUB-SysSec/grimoire}
-\subsection{Limitations/My Comments}
+\subsection{Limitations/Comments}
 The approach has significant difficulties with more syntactically complex constructs, such as matching the ID of opening and closing tags in XML or identifying variable constructs in scripting languages. 
 
 The generalization approach might be too coarse in many places. Obtaining more precise rules would help uncovering deeper parts of the target application in cases where multiple valid statements have to be produced. 
@@ -311,7 +341,7 @@ The authors present a new hybrid fuzzer named Intriguer (Fig.\ref{fig:intriguer}
 \subsection{Results/Evaluation}
 Evaluation results indicate that Intriguer outperforms the state-of-the-art fuzzers: Intriguer found all the bugs in the LAVA-M(5h) benchmark dataset for ground truth performance, and also discovered 43 new security bugs in seven real-world programs. They reported the bugs and received 23 new CVEs.
 
-\subsection{Limitations/My Comments}
+\subsection{Limitations/Comments}
  Intriguer performed field inference by inspecting off sets recorded in the execution traces and did not consider the association between those fields.  To perform field-level constraint solving more efficiently, Intriguer should identify fields of the same type through the FL and grouping them together. In addition to identifying repeated fields, we may infer structure from those fields and then consider mutation strategies specific to repeated fields based on it.
 
 Intriguer reduces the execution traces to emulate only the small portion of the instructions that are repeatedly used to access a wide range of input bytes. One may have two concerns regarding trace reduction. First, excessively reduced traces may affect a constraint solving for important branches. By considering the context-sensitivity of the run-time process, Intriguer will not perform trace reduction when a program is in a different context (e.g., different call stack). Second, the instructions can be repeatedly used to access only a narrow range of input bytes. Note that an execution bottleneck can also occur if the instructions are used to repetitively access the input with specific offsets. We can address this problem by reducing the execution traces for the instructions that use the same offset by considering the program’s context.
@@ -324,45 +354,92 @@ and conditional jump.
 
 \section{FIRM-AFL: High-Throughput Greybox Fuzzing of IoT Firmware via Augmented Process Emulation @Sec'19}
 \subsection{Background/Problems}
-Two fundamental problems in \emph{IoT fuzzing} due to its strong dependency on the actual
-hardware configuration:
-1) Compatibility issues by enabling fuzzing for
-POSIX-compatible firmware that can be emulated in a system
-emulator. 2) Performance bottleneck
-caused by system-mode emulation. 
+Two fundamental problems in \emph{IoT fuzzing} due to its strong dependency on the actual hardware configuration: 1) Compatibility issues by enabling fuzzing for POSIX-compatible firmware that can be emulated in a system emulator. 2) Performance bottleneck caused by system-mode emulation. 
 \subsection{Methods/Techniques}
-A novel technique
-called augmented process emulation. By combining system-
-mode emulation  (high generality and low
-efficiency)  and user-mode emulation  (low generality and
-high efficiency) in a novel way,
-augmented process emulation provides high compatibility as
-system-mode emulation and high throughput as user-mode
-emulation.  The program to be fuzzed is mainly
-run in user-mode emulation to achieve high efficiency, and
-switches to full system emulation only when necessary to
-ensure correct program execution. 
+A novel technique called augmented process emulation. By combining system-mode emulation  (high generality and low efficiency)  and user-mode emulation  (low generality and high efficiency) in a novel way, augmented process emulation provides high compatibility as system-mode emulation and high throughput as user-mode emulation.  The program to be fuzzed is mainly run in user-mode emulation to achieve high efficiency, and switches to full system emulation only when necessary to ensure correct program execution. 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{firm-afl.png} %
+    \includegraphics[width=\linewidth]{firm-afl.png} %width=\linewidth
     \caption{firm-afl's arch.}	
     \label{fig:firmafl}
 \end{figure}
 \subsection{Results/Evaluation}
-Evaluation results show that (1) FIRM-AFL is
-fully functional and capable of finding real-world vulnerabili-
-ties in IoT programs; (2) the throughput of FIRM-AFL is on
-average 8.2 times higher than system-mode emulation based
-fuzzing; and (3) FIRM-AFL can find 1-day vulnerabili-
-ties much faster than system-mode emulation based fuzzing,
-and find 0-day vulnerabilities.
+Evaluation results show that (1) FIRM-AFL is fully functional and capable of finding real-world vulnerabilities in IoT programs; (2) the throughput of FIRM-AFL is on average 8.2 times higher than system-mode emulation based fuzzing; and (3) FIRM-AFL can find 1-day vulnerabilities much faster than system-mode emulation based fuzzing, and find 0-day vulnerabilities.
 
 available at \url{https://github.com/zyw-200/FirmAFL}.
 
-\subsection{Limitations/My Comments}
-FIRM-AFL only supports the following CPU ar-
-chitectures: mipsel, mipseb and armel.
-It can also only fuzz a program in a firmware image that can be properly emulated
-by Firmadyne and runs a POSIX-compatible OS (e.g., Linux).
+\subsection{Limitations/Comments}
+FIRM-AFL only supports the following CPU architectures: mipsel, mipseb and armel.  It can also only fuzz a program in a firmware image that can be properly emulated by Firmadyne and runs a POSIX-compatible OS (e.g., Linux).
+\clearpage
+
+\section{RVFUZZER: Finding Input Validation Bugs in Robotic Vehicles Through
+Control-Guided Testing @Security'19}
+\subsection{Background/Problems}
+Attack surface of robotic vehicles (RVs) spans multiple aspects, such as (1) physical vulnerabilities of its sensors that enable external sensor spoofing attacks [72,77,80]; (2) traditional “syntactic” bugs in its control program (e.g., memory corruption bugs) that enable remote or trojaned exploits [75]; and (3) control-semantic bugs in its control program that enable attacks via remote control commands.  For attacks exploiting (1) and (2), there have been research efforts in defending against them [30,38,40,50,52,70,76]; whereas those exploiting (3) have not received sufficient attention. 
+
+ In this paper, the authors address a new type of vulnerability in RV control programs, called input validation bugs, which involve missing or incorrect validation checks on control parameter inputs. Such bugs can be exploited to cause physical disruptions to RVs which may result in mission failures and vehicle damages or crashes. Furthermore, attacks exploiting such bugs have a very small footprint: just one innocent-looking ground control command, requiring no code injection, control flow hijacking or sensor spoofing. 
+\subsection{Methods/Techniques}
+Testing RV control programs to find input validation bugs is challenging due to many different RV models (e.g., quadcopters and ground rovers) with a large number of hardware, software and control configuration options. Moreover, traditional fuzzing techniques are not directly applicable to RV control programs because: (1) With hundreds of configurable parameters, the control program has an extremely large input space to explore and (2) there is no uniform and obvious condition to automatically decide that a control program is malfunctioning. Many input validation bugs do not exhibit system-level symptoms until certain control and physical conditions are met at run-time.
+
+Our solution to finding input validation bugs – without control program source code – is motivated by the following ideas: (1) The impacts of attacks exploiting input validation bugs can be manifested by the victim vehicle’s control state; and (2) such state can be efficiently reproduced by combining the RV control program and a high-fidelity RV simulation framework, which is readily available [7,8].
+
+Based on these ideas, they develop RVFUZZER (Fig.\ref{fig:rvfuzzer}), a vetting system for finding input validation bugs in RV control programs through control-guided input mutation. The key insight behind RVFUZZER is that the RV control model, which is the generic theoretical model for a broad range of RVs, provides helpful semantic guidance to improve bug-discovery accuracy and efficiency. Specifically, RVFUZZER involves a control instability detector that detects control program misbehavior, by observing (simulated) physical operations of the RV based on the control model. In addition, RVFUZZER steers the input generation for finding input validation bugs more efficiently, by leveraging results from the control instability detector as feedback. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{rvfuzzer.png} %
+    \caption{rvfuzzer's arch.}	
+    \label{fig:rvfuzzer}
+\end{figure}
+\subsection{Results/Evaluation}
+In their evaluation of RVFUZZER on two popular RV control programs (ArduPilot [15] and PX4 [24]), a total of 89 input validation bugs are found, with 87 of them being zero-day bugs.
+\subsection{Limitations/Comments}
+The control parameters may have dependencies on one another.  In this work, they consider the subject control program binary as a black box and take a pragmatic approach by only revealing part of such inter-dependencies. A more generic approach to control parameter dependency derivation – possibly based on source code and a formal control model – is left as future work.
+
+There has been no standard safety testing framework created for RVs. We believe that RVFUZZER’s post-production, black-box-based vetting will serve as a useful complement to standardized safety testing during RV design and production.
+
+\newpage
+\section{ProFuzzer: On-the-fly Input Type Probing for Better
+Zero-day Vulnerability Discovery @S\&P'19}
+\subsection{Background/Problems}
+Existing mutation based fuzzers tend to randomly mutate the input of a program without understanding its underlying syntax and semantics.  This information (fields and their semantics) may not be documented and available to the fuzzer, and can be hard to recover without going through an in-depth heavyweight analysis procedure. 
+\subsection{Methods/Techniques}
+ In this paper, the authors propose a novel on-the-fly probing technique (called ProFuzzer, Fig.\ref{fig:profuzzer}) that automatically recovers and understands input fields of critical importance to vulnerability discovery during a fuzzing process and intelligently adapts the mutation strategy to enhance the chance of hitting zero-day targets. Since such probing is transparently piggybacked to the regular fuzzing, no prior knowledge of the input specification is needed. During fuzzing, individual bytes are first mutated and their fuzzing results are automatically analyzed to link those related together and identify the type for the field connecting them; these bytes are further mutated together following type-specific strategies, which substantially prunes the search space.  They define the probe types generally across all applications, thereby making their technique application agnostic.
+
+ProFuzzer is inspired by two important observations. First, a comprehensive, application-specific and semantically rich input specification is not necessary for fuzzing.  Second, inputs can be understood and their fields and data types can be discovered by directly observing the fuzzing process, particularly the ways the input content is mutated and the program’s execution path variations in response to the mutations. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{profuzzer.png} %
+    \caption{profuzzer's arch.}	
+    \label{fig:profuzzer}
+\end{figure}
+\subsection{Results/Evaluation}
+Eexperiments on standard benchmarks and real-world applications show that ProFuzzer substantially outperforms AFL and its optimized version AFLFast, as well as other state-of-art fuzzers including VUzzer, Driller and QSYM. Within two months, it exposed 42 zero-days in 10 intensively tested programs, generating 30 CVEs.
+\subsection{Limitations/Comments}
+Currently, the exploitation mutation procedure requires domain knowledge and manual efforts.  A future work is the automatic learning of exploitation rules from a larger pool of PoC.
+
+Review the assumptions that the target application has the following properties. First, its execution is deterministic: that is, given the same input, multiple executions of the application all follow the same execution path and yield the same result. Second, initial valid seed inputs of reasonable size are available. Third, if the validation on certain bytes fails, the execution will quickly terminate, which means that an exceptional execution has a shorter execution path than a normal one. 
+\newpage
+\section{RetroWrite: Statically Instrumenting COTS Binaries for Fuzzing and Sanitization @S\&P'20}
+\subsection{Background/Problems}
+The current state of the art for applying fuzzing or sanitization to binaries is dynamic binary translation, which has prohibitive performance overhead. The alternate technique, static binary rewriting, cannot fully recover symbolization information and hence has difficulty modifying binaries to track code coverage for fuzzing or to add security checks for sanitizers.
+\subsection{Methods/Techniques}
+In this paper, the authors show that static binary rewriting, leveraging reassembleable assembly, can produce sound and efficient code for an important class of binaries: \emph{64-bit position-independent code (PIC)}. Notably, such binaries include third party shared libraries, the analysis of which is the most pressing use-case for such a rewriter. The rewriting technique, called RetroWrite (Fig.\ref{fig:retrowrite}), leverages relocation information which is required for position independent code, and produces assembly files that can be reassembled into binaries. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{retrowrite.png} %
+    \caption{retrowrite's arch.}	
+    \label{fig:retrowrite}
+\end{figure}
+\subsection{Results/Evaluation}
+Binaries rewritten for coverage-guided fuzzing using RetroWrite are identical in performance to compiler-instrumented binaries and outperform the default QEMU-based instrumentation by 4.5x while triggering more bugs. Their implementation of binary-only Address Sanitizer is 3x faster than Valgrind’s memcheck, the state-of-the-art binary-only memory checker, and detects 80\% more bugs in the evaluation.  Available at: \url{https://github.com/HexHive/retrowrite}.
+\subsection{Limitations/Comments}
+a) Support for C++ Binaries: The current implementation of RetroWrite cannot rewrite C++ binaries safely due to missing symbolization for C++ exception handlers. 
+
+b) Closing the Performance Gap:  Another opportunity to reduce overhead is to remove unnecessary checks when a memory access is known to be safe, e.g., accessing variables on stack through constant offsets from the stack top. 
+
+c) Limitations of ASan-retrowrite: The limitations of ASan-retrowrite on stack and global sections are fundamental to static binary rewriting. To improve precision on stack and data sections, we may need to trade-off soundness or scalability. One attractive option is to use local symbolic execution to track base-pointers and disambiguate references.  
+
+d) Obfuscation: To protect intellectual property, some vendors ship obfuscated binaries. Retrowrite does not address obfuscation. Binary unpacking is usually specific to the obfuscation scheme used; and an obfuscated binary may be rewritten by RetroWrite, after it is pre-processed by a de-obfuscation step [57], [58].
 \newpage
 \end{document}
