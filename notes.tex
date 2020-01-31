@@ -70,47 +70,13 @@
 }
 
 \subsection{Background/Problems}
-Hybrid testing combines fuzzing and concolic
-execution. It leverages fuzzing to test easy-to-reach code
-regions and uses concolic execution to explore code blocks
-guarded by complex branch conditions. As a result, hybrid testing
-is able to reach deeper into program state space than fuzz
-testing or concolic execution alone. Recently, hybrid testing has
-seen significant advancement. However, {its code coverage-centric
-design is inefficient in vulnerability detection}. First, it {blindly}
-selects seeds for concolic execution and aims to explore new code
-continuously. However, as statistics show, a large portion of the
-explored code is often bug-free. Therefore, giving equal attention
-to every part of the code during hybrid testing is a non-optimal
-strategy. It slows down the detection of real vulnerabilities by
-over 43\%. Second, classic hybrid testing quickly moves on after
-reaching a chunk of code, rather than examining the hidden
-defects inside. It may frequently {miss subtle vulnerabilities}
-despite that it has already explored the vulnerable code paths.
+Hybrid testing combines fuzzing and concolic execution. It leverages fuzzing to test easy-to-reach code regions and uses concolic execution to explore code blocks guarded by complex branch conditions. As a result, hybrid testing is able to reach deeper into program state space than fuzz testing or concolic execution alone. Recently, hybrid testing has seen significant advancement. However, {its code coverage-centric design is inefficient in vulnerability detection}. First, it {blindly} selects seeds for concolic execution and aims to explore new code continuously. However, as statistics show, a large portion of the explored code is often bug-free. Therefore, giving equal attention to every part of the code during hybrid testing is a non-optimal strategy. It slows down the detection of real vulnerabilities by over 43\%. Second, classic hybrid testing quickly moves on after reaching a chunk of code, rather than examining the hidden defects inside. It may frequently {miss subtle vulnerabilities} despite that it has already explored the vulnerable code paths.
 \subsection{Methods/Techniques}
-The authors propose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framework pioneering
-a bug-driven principle.
+The authors propose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framework pioneering a bug-driven principle.
 
-\textbf{Bug-driven prioritization:} Instead of running all seeds without
-distinction in concolic execution, SAVIOR prioritizes
-those that have higher possibilities of leading to vulnerabilities.
-Specifically, before the testing, SAVIOR analyzes the source
-code and {statically labels the potentially vulnerable locations}
-in the target program.
-Moreover, SAVIOR computes the set of basic blocks reachable
-from each branch. During dynamic testing, SAVIOR {prioritizes the concolic execution seeds that can visit more
-important branches} (i.e., branches whose reachable code has
-more vulnerability labels).  
+\textbf{Bug-driven prioritization:} Instead of running all seeds without distinction in concolic execution, SAVIOR prioritizes those that have higher possibilities of leading to vulnerabilities.  Specifically, before the testing, SAVIOR analyzes the source code and {statically labels the potentially vulnerable locations} in the target program.  Moreover, SAVIOR computes the set of basic blocks reachable from each branch. During dynamic testing, SAVIOR {prioritizes the concolic execution seeds that can visit more important branches} (i.e., branches whose reachable code has more vulnerability labels).  
 
-\textbf{Bug-guided verification: }Aside from accelerating vulnerability
-detection, SAVIOR also verifies the labeled vulnerabilities
-along the program path traversed by the concolic executor.
-Specifically, SAVIOR synthesizes the faulty constraint of
-triggering each vulnerability on the execution path. If such
-constraint under the current path condition is satisfiable,
-SAVIOR solves the constraint to construct a test input as
-the proof. Otherwise, SAVIOR proves that the vulnerability
-is infeasible on this path, regardless of the input.
+\textbf{Bug-guided verification: }Aside from accelerating vulnerability detection, SAVIOR also verifies the labeled vulnerabilities along the program path traversed by the concolic executor.  Specifically, SAVIOR synthesizes the faulty constraint of triggering each vulnerability on the execution path. If such constraint under the current path condition is satisfiable, SAVIOR solves the constraint to construct a test input as the proof. Otherwise, SAVIOR proves that the vulnerability is infeasible on this path, regardless of the input.
 
 \begin{figure}[h]
     \centering
@@ -122,58 +88,20 @@ is infeasible on this path, regardless of the input.
 
 \subsection{Results/Evaluation %评估效果
 }
-Evaluation shows that the bug-driven approach outperforms mainstream
- hybrid testing systems driven by code coverage. On average, SAVIOR
-detects vulnerabilities 43.4\% faster than DRILLER and 44.3\%
-faster than QSYM, leading to the discovery of 88 and 76 more
-unique bugs, respectively. According to the {evaluation on 11 well
-fuzzed benchmark programs, within the first 24 hours, SAVIOR
-triggers 481 UBSAN violations, among which 243 are real bugs.}
-
+Evaluation shows that the bug-driven approach outperforms mainstream hybrid testing systems driven by code coverage. On average, SAVIOR detects vulnerabilities 43.4\% faster than DRILLER and 44.3\% faster than QSYM, leading to the discovery of 88 and 76 more unique bugs, respectively. According to the {evaluation on 11 well fuzzed benchmark programs, within the first 24 hours, SAVIOR triggers 481 UBSAN violations, among which 243 are real bugs.} 
 \subsection{Limitations/Comments}
 \begin{itemize}
-    \item Over-approximation in Vulnerability Labeling: SAVIOR leverages sound algorithms
-to label vulnerabilities where the over-approximation may
-introduce many false-positive labels. This imprecision can
-consequently weaken the performance of SAVIOR's prioritization. 
-One solution is to include more precise
-static analysis for finer-grained label pruning.
-    \item Prediction in Vulnerability Detection: Once reaching a
-potentially vulnerable location in concolic execution,
-SAVIOR extracts the guarding predicates of the vulnerability
-label. However, these predicates may contradict the current
-path condition. In case of such contradiction, SAVIOR terminates
-the exploration of the labeling site immediately.
-Moreover, we can predict whether an execution
-path can trigger a vulnerability or not by studying the
-runtime information of previous executions, more importantly,
-before that execution arrives the vulnerability site. To
-achieve this goal, we need to backwardly summarize
-path constraints from the labeled site to its predecessors in
-the explored paths, by using the weakest precondition.
-    \item Hybrid testing in SAVIOR is same with hybrid fuzzing in Driller and Berry. Both tools run fuzzing for code exploration and invoke concolic execution only on
-hard-to-solve branches, which takes advantage of both fuzzer's
-efficiency and concolic executor's constraint solving.
+    \item Over-approximation in Vulnerability Labeling: SAVIOR leverages sound algorithms to label vulnerabilities where the over-approximation may introduce many false-positive labels. This imprecision can consequently weaken the performance of SAVIOR's prioritization.  One solution is to include more precise static analysis for finer-grained label pruning.
+    \item Prediction in Vulnerability Detection: Once reaching a potentially vulnerable location in concolic execution, SAVIOR extracts the guarding predicates of the vulnerability label. However, these predicates may contradict the current path condition. In case of such contradiction, SAVIOR terminates the exploration of the labeling site immediately.  Moreover, we can predict whether an execution path can trigger a vulnerability or not by studying the runtime information of previous executions, more importantly, before that execution arrives the vulnerability site. To achieve this goal, we need to backwardly summarize path constraints from the labeled site to its predecessors in the explored paths, by using the weakest precondition.
+    \item Hybrid testing in SAVIOR is same with hybrid fuzzing in Driller and Berry. Both tools run fuzzing for code exploration and invoke concolic execution only on hard-to-solve branches, which takes advantage of both fuzzer's efficiency and concolic executor's constraint solving.
 \end{itemize}
 \newpage
 \section{Fuzzing File Systems via Two-Dimensional Input Space Exploration @S\&P'19}
 \subsection{Background/Problems}
-File systems are too big and too complex to be bug free. Nevertheless, to find bugs in file systems, regular stress-testing tools and formal checkers are limited due to the ever-increasing complexity of both file systems and OSes. Thus, fuzzing becomes a preferable choice, as it does not need much knowledge about a target. However,
-three prominent issues of existing file systems fuzzers exist: 
-(1) fuzzing a large blob image is inefficient; 
-(2) fuzzers do not exploit the dependence
-between a file system image and file operations; 
-(3) fuzzers use aging OSes and file systems, which results in
-irreproducible bugs.
+File systems are too big and too complex to be bug free. Nevertheless, to find bugs in file systems, regular stress-testing tools and formal checkers are limited due to the ever-increasing complexity of both file systems and OSes. Thus, fuzzing becomes a preferable choice, as it does not need much knowledge about a target. However, three prominent issues of existing file systems fuzzers exist: (1) fuzzing a large blob image is inefficient; (2) fuzzers do not exploit the dependence between a file system image and file operations; (3) fuzzers use aging OSes and file systems, which results in irreproducible bugs.
 
 \subsection{Methods/Techniques}
-The authors present JANUS (Fig.\ref{fig:janus}, 120K C++/C LoC), the first feedback-driven fuzzer
-that explores the two-dimensional input space of a file system,
-i.e., mutating metadata on a large image, while emitting image-directed
-file operations. In addition, JANUS relies on a library
-OS rather than on traditional VMs for fuzzing, which enables
-JANUS to load a fresh copy of the OS, thereby leading to better
-reproducibility of bugs.
+The authors present JANUS (Fig.\ref{fig:janus}, 120K C++/C LoC), the first feedback-driven fuzzer that explores the two-dimensional input space of a file system, i.e., mutating metadata on a large image, while emitting image-directed file operations. In addition, JANUS relies on a library OS rather than on traditional VMs for fuzzing, which enables JANUS to load a fresh copy of the OS, thereby leading to better reproducibility of bugs.
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.5]{janus.png} %
@@ -181,51 +109,21 @@ reproducibility of bugs.
     \label{fig:janus}
 \end{figure}
 \subsection{Results/Evaluation}
-The authors evaluate JANUS on 8 file systems
-and found 90 bugs in the upstream Linux kernel, 62 of which have
-been acknowledged. 43 bugs have been fixed with 32
-CVEs assigned. In addition, JANUS achieves higher code coverage
-on all the file systems after fuzzing 12 hours, when compared
-with the state-of-the-art fuzzer Syzkaller.
-JANUS visits 4.19X and 2.01X more code paths in Btrfs and ext4,
-respectively. Moreover, JANUS is able to reproduce 88–100\% of
-the crashes, while Syzkaller fails on all of them.
+The authors evaluate JANUS on 8 file systems and found 90 bugs in the upstream Linux kernel, 62 of which have been acknowledged. 43 bugs have been fixed with 32 CVEs assigned. In addition, JANUS achieves higher code coverage on all the file systems after fuzzing 12 hours, when compared with the state-of-the-art fuzzer Syzkaller.  JANUS visits 4.19X and 2.01X more code paths in Btrfs and ext4, respectively. Moreover, JANUS is able to reproduce 88–100\% of the crashes, while Syzkaller fails on all of them.
 \subsection{Limitations/Comments}
 \begin{itemize}
     \item JANUS cannot fuzz the DAX mode of a file system without modification on LKL. 
-    \item To achieve a minimal PoC, JANUS uses a brute force approach to revert
-every mutated byte and also tries to remove every invoked
-file operation to check whether the kernel still crashes at the
-expected location, which is sub-optimal.
-    \item JANUS does not support file systems (e.g., NTFS, GVfs, SSHF, etc.)
-that rely on FUSE (Filesystem in Userspace).
+    \item To achieve a minimal PoC, JANUS uses a brute force approach to revert every mutated byte and also tries to remove every invoked file operation to check whether the kernel still crashes at the expected location, which is sub-optimal.
+    \item JANUS does not support file systems (e.g., NTFS, GVfs, SSHF, etc.) that rely on FUSE (Filesystem in Userspace).
     \item By combining Janus and kAFL, we can fuzz file systems on other OSes.
     \item Other crash-consistency checkers [6,73] and semantic correctness checkers [36, 58] can rely on or integrate with Janus which aims to find general security bugs in file systems.
-    \item To find security bugs in OSes, a number
-    of general kernel fuzzing frameworks [20, 43, 46, 61] and
-    OS-specific kernel fuzzers [22, 25, 44, 45, 47] have been
-    proposed. Unlike JANUS, all these fuzzers generate random
-    system calls based upon predefined grammar rules, which is
-    ineffective in the context of file system fuzzing. Several recent
-    OS fuzzers such as IMF [22] and MoonShine [49] focusing
-    on seed distillation are orthogonal to this work. Nevertheless,
-    JANUS can start with seed programs of high quality by utilizing
-    their approaches.
+    \item To find security bugs in OSes, a number of general kernel fuzzing frameworks [20, 43, 46, 61] and OS-specific kernel fuzzers [22, 25, 44, 45, 47] have been proposed. Unlike JANUS, all these fuzzers generate random system calls based upon predefined grammar rules, which is ineffective in the context of file system fuzzing. Several recent OS fuzzers such as IMF [22] and MoonShine [49] focusing on seed distillation are orthogonal to this work. Nevertheless, JANUS can start with seed programs of high quality by utilizing their approaches.
 \end{itemize}
 \newpage
 
 \section{REDQUEEN: Fuzzing with Input-to-State Correspondence @NDSS'19}
 \subsection{Background/Problems}
-Two common problems of fuzzing are magic numbers
-and (nested) checksums (see Listing \ref{fuzzissues}). Computationally expensive methods such
-as taint tracking and symbolic execution are typically used to
-overcome such roadblocks. Unfortunately, such methods often
-require access to source code, a rather precise description of the
-environment (e.g., behavior of library calls or the underlying OS),
-or the exact semantics of the platform's instruction set, and thus 
-such methods are the polar opposite of the approach pioneered by AFL: to a
-large extend, AFL's success is based on the fact that it makes
-few assumptions about the program's behavior.
+Two common problems of fuzzing are magic numbers and (nested) checksums (see Listing \ref{fuzzissues}). Computationally expensive methods such as taint tracking and symbolic execution are typically used to overcome such roadblocks. Unfortunately, such methods often require access to source code, a rather precise description of the environment (e.g., behavior of library calls or the underlying OS), or the exact semantics of the platform's instruction set, and thus such methods are the polar opposite of the approach pioneered by AFL: to a large extend, AFL's success is based on the fact that it makes few assumptions about the program's behavior.
 \begin{lstlisting}[label=fuzzissues,language={[ANSI]C}, caption={Roadblocks for feedback-driven fuzzing.}]
 /* magic number example */
 if(u64(input)==u64("MAGICHDR"))
@@ -238,88 +136,42 @@ if(u64(input)==sum(input+8, len-8))
 \end{lstlisting}
 
 \subsection{Methods/Techniques}
-The authors introduce a lightweight, yet very effective
-approach to facilitate
-and optimize state-of-the-art feedback fuzzing that easily scales
-to large binary applications and unknown environments. We
-observe that during the execution of a given program, parts
-of the input often end up directly (i.e., nearly unmodified)
-in the program state. This \emph{input-to-state correspondence} can
-be exploited to create a robust method to overcome common
-fuzzing roadblocks in a highly effective and efficient manner.
-Their prototype implementation, called REDQUEEN, is able to
-solve magic bytes and (nested) checksum tests automatically
-for a given binary executable. Additionally, The authors show that the
-techniques outperform various state-of-the-art tools on a wide
-variety of targets across different privilege levels (kernel-space
-and userland) with no platform-specific code.
+The authors introduce a lightweight, yet very effective approach to facilitate and optimize state-of-the-art feedback fuzzing that easily scales to large binary applications and unknown environments. They observe that during the execution of a given program, parts of the input often end up directly (i.e., nearly unmodified) in the program state. This \emph{input-to-state correspondence} can be exploited to create a robust method to overcome common fuzzing roadblocks in a highly effective and efficient manner.  Their prototype implementation, called REDQUEEN, is able to solve magic bytes and (nested) checksum tests automatically for a given binary executable. Additionally, The authors show that the techniques outperform various state-of-the-art tools on a wide variety of targets across different privilege levels (kernel-space and userland) with no platform-specific code.
 \subsection{Results/Evaluation}
-REDQUEEN is the
-first method to find more than 100\% of the bugs planted in
-LAVA-M across all targets. Furthermore, The authors discovered
-65 new bugs and obtained 16 CVEs in multiple programs and
-OS kernel drivers. Finally, their evaluation demonstrates that
-REDQUEEN is fast, widely applicable and outperforms concurrent
-approaches by up to three orders of magnitude. Available at: \url{https://github.com/RUB-SysSec/redqueen}
+REDQUEEN is the first method to find more than 100\% of the bugs planted in LAVA-M across all targets. Furthermore, The authors discovered 65 new bugs and obtained 16 CVEs in multiple programs and OS kernel drivers. Finally, their evaluation demonstrates that REDQUEEN is fast, widely applicable and outperforms concurrent approaches by up to three orders of magnitude. Available at: \url{https://github.com/RUB-SysSec/redqueen}
 \subsection{Limitations/Comments}
 \begin{itemize}
     \item REDQUEEN cannot deal with those cases in which the input does not correspond to the state, such as compression or hash maps in the input.
-    \item It would be beneficial to use this
-lightweight approach as a first step where possible, and than
-solve the remaining challenges using complex approaches.
+    \item It would be beneficial to use this lightweight approach as a first step where possible, and than solve the remaining challenges using complex approaches.
 \end{itemize}
 
 \subsection*{Core design of AFL}
 \hspace{2mm}{
-Fuzzers from the AFL family have three important components:
-(i) the queue, (ii) the bitmap, and (iii) the mutators. The queue
-is where all inputs are stored. During the fuzzing process,
-an input is picked from the queue, fuzzed for a while, and,
-eventually, returned to the queue. After picking one input, the
-mutators perform a series of mutations. After each step, the
-mutated input is executed. The target is instrumented such that
-the coverage produced by the input is written into a bitmap. If
-the input triggered new coverage (and, therefore, a new bit
-is set in the bitmap), the input is appended to the queue.
-Otherwise, the mutated input is discarded. The mutators are
-organized in different stages. The first stages are called the
-\emph{deterministic stages}. These stages are applied once, no matter
-how often the input is picked from the queue. They consist
-of a variety of simple mutations such as “try flipping each
-bit”. When the deterministic stages are finished or an input
-is picked for the second time, the so called \emph{havoc phase} is
-executed. During this phase, multiple random mutations are
-applied at the same time at random locations. Similarly, if the
-user provided a dictionary with interesting strings, they are
-added in random positions. Linked to the havoc stage is the
-\emph{splicing stage}, in which two different inputs are combined at
-a random position.}
+Fuzzers from the AFL family have three important components: (i) the queue, (ii) the bitmap, and (iii) the mutators. The queue is where all inputs are stored. During the fuzzing process, an input is picked from the queue, fuzzed for a while, and, eventually, returned to the queue. After picking one input, the mutators perform a series of mutations. After each step, the mutated input is executed. The target is instrumented such that the coverage produced by the input is written into a bitmap. If the input triggered new coverage (and, therefore, a new bit is set in the bitmap), the input is appended to the queue.  Otherwise, the mutated input is discarded. The mutators are organized in different stages. The first stages are called the \emph{deterministic stages}. These stages are applied once, no matter how often the input is picked from the queue. They consist of a variety of simple mutations such as “try flipping each bit”. When the deterministic stages are finished or an input is picked for the second time, the so called \emph{havoc phase} is executed. During this phase, multiple random mutations are applied at the same time at random locations. Similarly, if the user provided a dictionary with interesting strings, they are added in random positions. Linked to the havoc stage is the \emph{splicing stage}, in which two different inputs are combined at a random position.}
 \newpage
 
-\section{GRIMOIRE: Synthesizing Structure while Fuzzing @Security'19 }
+\section{Grimoire: Synthesizing Structure while Fuzzing @Security'19 }
 \subsection{Background/Problems}
 One common challenge for current fuzzing techniques are programs which process highly structured input languages such as interpreters, compilers, text-based network protocols or markup languages. Typically, such inputs are consumed by the program in two stages: parsing and semantic analysis. If parsing of the input fails, deeper parts of the target program—containing the actual application logic—fail to execute; hence, bugs hidden “deep” in the code cannot be reached. Even advanced feedback fuzzers— such as AFL—are typically unable to produce diverse sets of syntactically valid inputs.
 
 Previous approaches to address this problem are typically based on manually provided grammars or seed corpora. On the downside, such methods require human experts to (often manually) specify the grammar or suitable seed corpora, which becomes next to impossible for applications with undocumented or proprietary input specifications. An orthogonal line of work tries to utilize advanced program analysis techniques to automatically infer grammars. Typically performed as a pre-processing step, such methods are used for generating a grammar that guides the fuzzing process. However, since this grammar is treated as immutable, no additional learning takes place during the actual fuzzing run.
 
 \subsection{Methods/Techniques}
-The authors present the design and implementation of GRIMOIRE, a fully automated coverage-guided fuzzer which works without any form of human interaction or pre-configuration; yet, it is still able to efficiently test programs that expect highly structured inputs. Thet achieve this by performing large-scale mutations in the program input space using grammar-like combinations to synthesize new highly structured inputs without any pre-processing step. 
+The authors present the design and implementation of Grimoire (Fig.\ref{fig:grimoire}), a fully automated coverage-guided fuzzer which works without any form of human interaction or pre-configuration; yet, it is still able to efficiently test programs that expect highly structured inputs. Thet achieve this by performing large-scale mutations in the program input space using grammar-like combinations to synthesize new highly structured inputs without any pre-processing step. 
 
  Their approach is based on two key observations: First, they can use code coverage feedback to automatically infer structural properties of the input language. Second, the precise and “correct” grammars generated by previous approaches are actually unnecessary in practice: since fuzzers have the virtue of high test case throughput, they can deal with a significant amount of noise and imprecision. In fact, in some programs (such as Boolector) with a rather diverse set of input languages, the additional noise even benefits the fuzz testing. In a similar vein, there are often program paths which can only be accessed by inputs outside of the formal specifications, e. g., due to incomplete or imprecise implementations or error handling code.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{grimoire.png} %
+    \includegraphics[width=0.6\linewidth]{grimoire.png} %
     \caption{Advantage of Grimoire.}	
-    \label{fig:janus}
+    \label{fig:grimoire}
 \end{figure}
 \subsection{Results/Evaluation}
- First, The authors evaluate GRIMOIRE against other fuzzers on four scripting language interpreters (mruby, PHP, Lua and JavaScriptCore), a compiler (TCC), an assembler (NASM), a database (SQLite), a parser (libxml) and an SMT solver (Boolector).  GRIMOIRE outperforms all existing coverage-guided fuzzers; in the case of Boolector, GRIMOIRE finds up to 87\% more coverage than the baseline (REDQUEEN). 
+ First, The authors evaluate Grimoire against other fuzzers on four scripting language interpreters (mruby, PHP, Lua and JavaScriptCore), a compiler (TCC), an assembler (NASM), a database (SQLite), a parser (libxml) and an SMT solver (Boolector).  Grimoire outperforms all existing coverage-guided fuzzers; in the case of Boolector, Grimoire finds up to 87\% more coverage than the baseline (REDQUEEN). 
 
- Second, they evaluate GRIMOIRE against state-of-the-art grammar-based fuzzers. they observe that in situations where an input specification is available, it is advisable to use GRIMOIRE in addition to a grammar fuzzer to further increase the test coverage found by grammar fuzzers.
+ Second, they evaluate Grimoire against state-of-the-art grammar-based fuzzers. they observe that in situations where an input specification is available, it is advisable to use Grimoire in addition to a grammar fuzzer to further increase the test coverage found by grammar fuzzers.
  
- Third, they evaluate GRIMOIRE against current state-of-the-art approaches that use automatically inferred grammars for fuzzing and found that they can significantly outperform such approaches. Overall, GRIMOIRE found 19 distinct memory corruption bugs that they manually verified. they responsibly disclosed all of them to the vendors and obtained 11 CVEs. During their evaluation, the next best fuzzer only found 5 of these bugs. In fact, GRIMOIRE found more bugs than all five other fuzzers combined.
- 
- Available at: \url{https://github.com/RUB-SysSec/grimoire}
+ Third, they evaluate Grimoire against current state-of-the-art approaches that use automatically inferred grammars for fuzzing and found that they can significantly outperform such approaches. Overall, Grimoire found 19 distinct memory corruption bugs that they manually verified. they responsibly disclosed all of them to the vendors and obtained 11 CVEs. During their evaluation, the next best fuzzer only found 5 of these bugs. In fact, Grimoire found more bugs than all five other fuzzers combined. Available at: \url{https://github.com/RUB-SysSec/grimoire}
 \subsection{Limitations/Comments}
 The approach has significant difficulties with more syntactically complex constructs, such as matching the ID of opening and closing tags in XML or identifying variable constructs in scripting languages. 
 
@@ -441,5 +293,77 @@ b) Closing the Performance Gap:  Another opportunity to reduce overhead is to re
 c) Limitations of ASan-retrowrite: The limitations of ASan-retrowrite on stack and global sections are fundamental to static binary rewriting. To improve precision on stack and data sections, we may need to trade-off soundness or scalability. One attractive option is to use local symbolic execution to track base-pointers and disambiguate references.  
 
 d) Obfuscation: To protect intellectual property, some vendors ship obfuscated binaries. Retrowrite does not address obfuscation. Binary unpacking is usually specific to the obfuscation scheme used; and an obfuscated binary may be rewritten by RetroWrite, after it is pre-processed by a de-obfuscation step [57], [58].
+\newpage
+\section{SLAKE: Facilitating Slab Manipulation for Exploiting
+Vulnerabilities in the Linux Kernel @CCS'19}
+
+\subsection{Background/Problems}
+To determine the exploitability for a kernel vulnerability, a security analyst usually has to manipulate slab and thus demonstrate the capability of obtaining the control over a program counter or performing privilege escalation. However, this is a lengthy process because (1) an analyst typically has no clue about what objects and system calls are useful for kernel exploitation and (2) he lacks the knowledge of manipulating a slab and obtaining the desired layout. In the past, researchers have proposed various techniques to facilitate exploit development. Unfortunately, none of them can be easily applied to address these challenges due to the complexity of the Linux kernel and the dynamics and non-deterministic of slab variations.
+\subsection{Methods/Techniques}
+To tackle the challenges, the authors first use static and dynamic analysis techniques to explore the kernel objects, and the corresponding system calls useful for exploitation. Second, they model commonly-adopted exploitation methods and develop a technical approach to facilitate the slab layout adjustment. By extending LLVM as well as Syzkaller, they implement the techniques and name their combination after SLAKE. 
+
+ More specifically, they first perform reachability analysis over the call graph and preserve only those system calls that could potentially reach to the sites of interest. For each site of interest, they then perform fuzz testing using the results of reachability analysis, exploring the actual path towards that site. 
+\subsection{Results/Evaluation}
+They evaluate SLAKE by using 27 real-world kernel vulnerabilities, demonstrating that it could not only diversify the ways to perform kernel exploitation but also sometimes escalate the exploitability of kernel vulnerabilities.
+Available at: \url{https://github.com/chenyueqi/SLAKE}
+\subsection{Limitations/Comments}
+Some special situations are ignored in object identification. For example, userland data can be copied first to the kernel stack through a system call and then migrated to the slab through a kernel function (e.g., memcpy() ).  To identify spray objects in this special situation, an accurate inter-procedural data flow analysis is inevitable. 
+
+Other exploitation methods. In addition to the four exploitation methods discussed in Section 2, security researchers have developed other approaches for exploiting some special cases (e.g., [16, 21]) as well as heap-based use-before-initialization vulnerability. 
+
+Vulnerability capability. The authors manually extract vulnerability capabilities from a PoC program under the guidance of debugging tools. Technically speaking, this process could be potentially automated by using dynamic analysis methods such as symbolic tracing.  vulnerability capability exploration is a non-trivial problem, which might need the integration of various advanced techniques in program analysis. 
+
+Other allocators. SLAKE introduces a systematic approach for slab layout manipulation. To extend this approach to other kernel allocators (e.g., SLOB allocator [25], buddy system [5]) or those used in userland (e.g., ptmalloc[12]), a modification is required. 
+
+The approach can be used for other open-source OSes (e.g., FreeBSD and Android).
+\newpage
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=\linewidth]{xx.png} %
+%    \caption{xx's arch.}	
+%    \label{fig:xx}
+%\end{figure}
+\section{Block Oriented Programming: Automating Data-Only Attacks @CCS'18}
+\subsection{Background/Problems}
+With the widespread deployment of Control-Flow Integrity (CFI), control-flow hijacking attacks, and consequently code reuse attacks, are significantly more difficult. CFI limits control flow to well-known locations, severely restricting arbitrary code execution.  Assessing the remaining attack surface of an application under advanced control-flow hijack defenses such as CFI and shadow stacks remains an open problem.
+\subsection{Methods/Techniques}
+The authors introduce BOPC (Block Oriented Programming Compiler, Fig.\ref{fig:bopc}), a mechanism to automatically assess whether an attacker can execute arbitrary code on a binary hardened with CFI/shadow stack defenses. BOPC computes exploits for a target program from payload specifications written in a Turing-complete, high-level language called SPloit Language (SPL) that abstracts away architecture and program-specific details. SPL payloads are compiled into a program trace that executes the desired behavior on top of the target binary.  The input for BOPC is an SPL payload, a starting point (e.g., from a fuzzer crash) and an arbitrary memory write primitive that allows application state corruption. To map SPL payloads to a program trace, BOPC introduces Block Oriented Programming (BOP), a new code reuse technique that utilizes entire basic blocks as gadgets along valid execution paths in the program, i.e., without violating CFI or shadow stack policies. They find that the problem of mapping payloads to program traces is NP-hard, so BOPC first reduces the search space by pruning infeasible paths and then uses heuristics to guide the search to probable paths. BOPC encodes the BOP payload as a set of memory writes.
+
+The core component of BOPC is the mapping process through a novel code reuse technique called Block Oriented Programming (BOP). First, BOPC translates the SPL payload into constraints for individual statements and, for each statement, searches for basic blocks in the target binary that satisfy these constraints (called \emph{candidate blocks}). At this point, SPL abstracts register assignments from the underlying architecture. Second, BOPC infers a resource (register and state) mapping for each SPL statement, iterating through the set of candidate blocks and turning them into \emph{functional blocks}.  Functional blocks can be used to execute a concrete instantiation of the given SPL statement. Third, BOPC constructs a trace that connects each functional block through \emph{dispatcher blocks}. Since the mapping process is NP-hard, to find a solution in reasonable time BOPC first prunes the set of functional blocks per statement to constrain the search space and then uses a ranking based on the proximity of individual functional blocks as a heuristic when searching for dispatcher gadgets.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{bopc.png} %
+    \caption{\footnotesize{bopc's arch.  The red arrows indicate the iterative process upon failure. CFGA: CFG with basic block abstractions added, IR:Compiled SPL payload RG:Register mapping graph, VG:All variable mapping graphs, CB: Set of candidate blocks, FB: Set of functional blocks, MAdj:Adjacency matrix of SPL payload, $\delta$G:Delta graph, Hk:Induced subgraph, Cw:Constraint set. L:Maximum length of continuous dispatcher blocks, P:Upper bound on payload “shuffles”, N:Upper bound on minimum induced subgraphs, K:Upper bound on shortest paths for dispathers.}}
+    \label{fig:bopc}
+\end{figure}
+\subsection{Results/Evaluation}
+They execute 13 SPL payloads applied to 10 popular applications.  BOPC successfully finds payloads and complex execution traces – which would likely not have been found through manual analysis – while following the target’s Control-Flow Graph under an ideal CFI policy in 81\% of the cases. Available at \url{https://github.com/HexHive/BOPC}.
+
+\subsection{Limitations/Comments}
+BOPC is limited by the granularity of basic blocks. That is, a combination of basic blocks could potentially lead to the execution of a desired SPL statement, while individual blocks might not. Take for instance an instruction that sets a virtual register to 1. Assume that a basic block initializes rcx to 0, while the following block increments it by 1; a pattern commonly encountered in loops. Al- though there is no functional block that directly sets rcx to 1, the combination of the previous two has the desired eff ect. BOPC can be expanded to address this issue if the basic blocks are coalesced into larger blocks that result in a new CFG.
+
+BOPC sets several upper bounds defined by user inputs. These configurable bounds include the upper limit of (i) SPL payload permutations (P), (ii) length of continuous blocks (L), (iii) of minimum induced subgraphs extracted from the delta graph (N ), and (iv) dispatcher paths between a pair of functional blocks (K). These upper bounds along with the timeout for symbolic execution, reduce the search space, but prune some potentially valid solutions. The evaluation of higher limits may result in alternate or more solutions being found by BOPC.
+\newpage
+\section{Automatic Heap Layout Manipulation for Exploitation @Security'18}
+\subsection{Background/Problems}
+As of 2018, the most common approach to solving heap layout manipulation (HLM) problems is manual work by experts.  An analyst examines the allocator’s implementation to gain an understanding of its internals; then, at run-time, they inspect the state of its various data structures to determine what interactions are necessary in order to manipulate the heap into the required layout. The process is complicated by the fact that – when constructing an exploit – one cannot directly interact with the allocator, but instead must use the API exposed by the target program. 
+
+There are four variants of the HLM problem, depending on whether the allocator is deterministic or non-deterministic and whether the starting state is known or unknown. In this paper the authors consider a known starting state and a deterministic allocator, and assume there are no other actors interacting with the heap. 
+
+Their objective in this variant of the HLM problem is as follows: \emph{Given the API for a target program and a means by which to allocate a source and destination buffer, find a sequence of API calls that position the destination and source at a specific offset from each other}.
+\subsection{Methods/Techniques}
+The authors present the first automatic approach to the problem, based on pseudo-random black-box search. Our approach searches for the inputs required to place the source of a heap-based buffer overflow or underflow next to heap-allocated objects that an exploit developer, or automatic exploit generation system, wishes to read or corrupt. They present a framework for benchmarking heap layout manipulation algorithms, and use it to evaluate our approach on several real-world allocators, showing that pseudo-random black box search can be highly effective. They then present SHRIKE (Fig.\ref{fig:shrike}), a novel system that can perform automatic heap layout manipulation on the PHP interpreter and can be used in the construction of control-flow hijacking exploits. Starting from PHP’s regression tests, SHRIKE discovers fragments of PHP code that interact with the interpreter’s heap in useful ways, such as making allocations and deallocations of particular sizes, or allocating objects containing sensitive data, such as pointers. SHRIKE then uses our search algorithm to piece together these fragments into programs, searching for one that achieves a desired heap layout. SHRIKE allows an exploit developer to focus on the higher level concepts in an exploit, and to defer the resolution of heap layout constraints to SHRIKE. Available at \url{https://sean.heelan.io/heaplayout}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{shrike.png} %
+    \caption{shrike's arch.}	
+    \label{fig:shrike}
+\end{figure}
+\subsection{Results/Evaluation}
+ They chose the tcmalloc (v2.6.1), dlmalloc (v2.8.6) and avrlibc (v2.0) allocators for experimentation.  They demonstrate this by using SHRIKE in the construction of a control-flow hijacking exploit for the PHP interpreter.  SHRIKE had a 70\% success rate overall, and a 100\% success rate in cases where there was no noise.
+\subsection{Limitations/Comments}
+Other three variants of the HLM problem are harder than the one addressed in this paper. Some allocators, e.g., Windows system allocator, jemalloc and the DIEHARD family of allocators, do utilise non-determinism to make exploitation more difficult.
+
+Read other references, e.g., [7, 15, 26, 32, 33], for more future works.
 \newpage
 \end{document}
