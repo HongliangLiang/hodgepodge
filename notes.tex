@@ -366,4 +366,89 @@ Other three variants of the HLM problem are harder than the one addressed in thi
 
 Read other references, e.g., [7, 15, 26, 32, 33], for more future works.
 \newpage
+\section{MarkUs: Drop-in use-after-free prevention for
+low-level languages @S\&P'20}
+
+\subsection{Background/Problems}
+A variety of techniques have been proposed to mitigate use-after-free vulnerabilities in C and C++. For example, all pointer locations can be logged and then nullified when their data is freed [1], [4], [5], objects allocated with their own page-table entries [6], [7], or probabilistic reuse delays employed [8]–[10]. However, these tend to exhibit both high average- and worst-case overheads in terms of performance and memory utilisation, or have limited coverage.
+\subsection{Methods/Techniques}
+The authors present MarkUs, a memory allocator that prevents this form of attack at low overhead, sufficient for deployment in real software, even under allocation- and memory-intensive scenarios. MarkUs prevent use-after-free attacks by \emph{quarantining data freed by the programmer and forbidding its reallocation until there are no dangling pointers targeting it}. To identify these MarkUs traverses live-objects accessible from registers and memory, marking those it encounters, to check whether quarantined data is accessible from any currently allocated location. 
+
+Unlike garbage collection, which is unsafe in C and C++, MarkUs ensures safety by \emph{only freeing data that is both quarantined by the programmer and has no identifiable dangling pointers}. The information provided by the programmer’s allocations and frees further allows to optimise the process by freeing physical addresses early for large objects, specialising analysis for small objects, and only performing marking when sufficient data is in quarantine. 
+\subsection{Results/Evaluation}
+Using MarkUs, they reduce the overheads of temporal safety in low-level languages to 1.1$\times$ on average for SPEC CPU2006, with a maximum slowdown of only 2$\times$, vastly improving upon four state-of-the-art techniques, i.e., Oscar, DangSan, pSweeper and CRCount.
+\subsection{Limitations/Comments}
+MarkUs fails to detect complex use-after-free vulnerabilities involving hidden pointers, as is a limitation with any technique that involves identifying pointers.
+
+Tagged memory techniques [36,37] can make MarkUs more efficient, by allowing reuse of memory multiple times, based on incrementing the ID tag of each successive allocation, before address space must be quarantined to ensure old IDs have been eliminated and can be reallocated.
+\newpage
+\section{KARONTE: Detecting Insecure Multi-binary Interactions in Embedded Firmware @S\&P'20}
+\subsection{Background/Problems}
+Low-power, single-purpose embedded devices (e.g., routers and IoT devices) have become ubiquitous. While they automate and simplify many aspects of users’ lives, recent large-scale attacks have shown that their sheer number poses a severe threat to the Internet infrastructure. Unfortunately, the software on these systems is hardware-dependent, and typically executes in unique, minimal environments with non-standard configurations, making security analysis particularly challenging.  
+
+Many of the existing devices implement their functionality through the use of multiple binaries. This multi-binary service implementation renders current static and dynamic analysis techniques either ineffective or inefficient, as they are unable to identify and adequately model the communication between the various executables.
+\subsection{Methods/Techniques}
+Based on the intuition that binaries communicate using a finite set of Inter-Process Communication (IPC) paradigms, the authors present KARONTE, a static analysis approach capable of analyzing embedded-device firmware by modeling and tracking multi-binary interactions.  The approach propagates taint information between binaries to detect insecure interactions and identify vulnerabilities.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{karonte.png} %
+    \caption{karonte's arch.  After unpacking a firmware sample, KARONTE extracts the binaries handling user requests, identifies their data dependencies to build the Binary Dependency Graph (BDG), and uses its inter-binary taint analysis engine to find insecure data flows. CPF: Communication Paradigm Finder.}	
+    \label{fig:karonte}
+\end{figure}
+\subsection{Results/Evaluation}
+First, they evaluated KARONTE on 53 firmware samples from various vendors, showing that the tool can successfully track and constrain multi-binary interactions. This led to the discovery of 46 zero-day bugs. Then, they performed a large-scale experiment on 899 different samples, showing that KARONTE scales well with firmware samples of different size and complexity. Available at: \url{https://github.com/ucsb-seclab/karonte}.
+\subsection{Limitations/Comments}
+KARONTE suffers from the path explosion problem. 
+they limit path explosion by: (i) providing precise taint propagation policies, (ii) using timeouts, (iii) limiting loop iterations, and (iv) automatically creating function summaries.
+
+Karonte may generate both false positives and false negatives. They are due to the fact that taint information might not be correctly propagated to unfollowed paths (e.g., due to time, call-stack depth, or loop constraints), or imprecisions of the underlying static analysis tool (i.e., angr). This might result in incomplete BDGs, and, therefore, some security vulnerabilities might be left undiscovered. 
+
+Though by default, KARONTE finds buffer overflows and denial-of-service vulnerabilities, its design allows an analyst to support different types of vulnerabilities. For instance, an analyst can extend Karonte to find use-after-free bugs by providing a new detection module, such as [16].
+\newpage
+\section{What You Corrupt Is Not What You Crash: Challenges in Fuzzing Embedded Devices @NDSS'18}
+\subsection{Background/Problems}
+While common desktop systems have a variety of mechanisms to detect faulty states (e.g., segmentation faults, heap hardening and sanitizers) and to analyze them (e.g., command-line return values or core dumps), embedded devices often lack such mechanisms because of their limited I/O capabilities, constrained cost, and limited computing power.  As a result, \emph{silent memory corruptions} occur more frequently on embedded devices than on traditional computer systems, creating a significant challenge for conducting fuzzing sessions on embedded systems software.
+\subsection{Methods/Techniques}
+The authors analyze the challenges of fuzzing embedded devices (fault detection, performance and scalability, instrumentation), make a classification of embedded systems with respect to the difficulty of detecting memory corruptions in their software, evaluate the real world effects of different memory corruptions on those classes of embedded systems, describe the techniques that can be used for improving fuzzing on embedded devices, and present six heuristics that can be used to detect faults due to the memory corruption (tracking segment, format specifier, heap object, stack object, call stack, call frame, respectively, Fig.\ref{fig:liveanalysis}), when the firmware of an embedded system can be run in either a partial or full emulation environment.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{liveanalysis.png} %
+    \caption{Deployed live analysis techniques and their requirements.}	
+    \label{fig:liveanalysis}
+\end{figure}
+\subsection{Results/Evaluation}
+They implemented the heuristics on top of a combination of the Avatar [54] and PANDA [13] frameworks. They use PANDA to emulate the firmware and rely on its plugin system to obtain live feedback over the execution of a partial or fully emulated firmware. Avatar allows the tester to save and replay the device state after it is initialized. 
+
+They conducted a number of tests to show their effectiveness and their overhead in a fuzzing experiment. Experiments show that partial emulation significantly reduces the fuzzing throughput. However, when full emulation is possible, this setup can combine the best of both worlds and detect 100\% of the corrupting inputs while improving the fuzzing efficiency beyond what could be obtained using the physical device. Available at: \url{https://github.com/avatartwo/ndss18_wycinwyc}.
+\subsection{Limitations/Comments}
+They relied on artificial bugs in the experiments, which lacks of evidents in real applications. When migrating from an artificial test scenario to real world software, the observed false positive and negative rates of the individual heuristics will vary.
+
+The ability to fully emulate arbitrary firmware images is still an open problem. Therefore, the solution discussed in this paper may not be applicable to all scenarios and all embedded devices. 
+
+\newpage
+
+\section{Looking from the Mirror: Evaluating IoT Device Security through Mobile Companion Apps @Security'19}
+\subsection{Background/Problems}
+Smart home IoT devices have increasingly become a favorite target for the cybercriminals due to their weak security designs. To identify these vulnerable devices, existing approaches rely on the analysis of either real devices or their firmware images. These approaches, unfortunately, are difficult to scale in the highly fragmented IoT market due to the unavailability of firmware images and the high cost involved in acquiring real-world devices for security analysis.
+
+\subsection{Methods/Techniques}
+The authors present a platform (Fig.\ref{fig:mirror}) that accelerates vulnerable device discovery and analysis, without requiring the presence of actual devices or firmware. Our approach is based on two key observations: First, IoT devices tend to reuse and customize others’ components (e.g., software, hardware, protocol, and services), so vulnerabilities found in one device are often present in others. Second, reused components can be indirectly inferred from the mobile companion apps of the devices; so a cross analysis of mobile companion apps may allow us to approximate the similarity between devices.
+
+(1) app analysis: find the characteristics of a device by analyzing its companion app, and (2) cross-app analysis: find device families, i.e. cluster of devices, that have similarity in some of the characteristics found in app analysis by analyzing multiple apps. Clustering helps identify apps that have a similar set of vulnerabilities based on shared components.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{mirror.png} %
+    \caption{mirror's arch.}	
+    \label{fig:mirror}
+\end{figure}
+\subsection{Results/Evaluation}
+They perform a large-scale analysis involving over 4,700 devices and  2000 apps. Their study brings to light the sharing of vulnerable components across the smart home IoT devices (e.g., shared vulnerable protocol, backend services, device rebranding), and leads to the discovery of 324 devices from 73 different vendors that are likely to be vulnerable to a set of security issues.
+
+\subsection{Limitations/Comments}
+The major limitation of the approach is the accuracy of the analysis results. As the analysis solely on mobile companion apps, the information obtained may not be an accurate reflection of the device. For example, a device may have patched a vulnerability and the patch did not change the device interfaces at all. In this case, the analysis will still output the device as potentially vulnerable. A multi-stage solution can help address this limitation where the first stage (i.e., the platform) narrows down the scope of analysis by identifying the potentially vulnerable devices, and the second stage automates the vulnerability confirmation with more targeted but rigorous analysis, e.g., dynamic/static analysis of firmware, device fuzzing.
+
+Another limitation of the approach is that the network interface analysis can be rendered less effective in scenarios where IoT backend servers or cloud significantly decouple device interfaces from app interfaces. An example is the Google and Amazon devices where much of the management is done through the cloud.
+
+Another aspect to improve on is the dimension and granularity of the similarity analysis. Further improvements to the App Analysis Engine may allow the platform to detect similarities in finer components of a device software stack (e.g., web server, PHP interpreter, web application, OS, driver) as well as other dimensions (e.g., similar developer, similar development toolchain). This would enable us to track vulnerability propagation more comprehensively and accurately. 
+\newpage
 \end{document}
