@@ -495,4 +495,55 @@ Hardware Roots of Trust. PARTEMU does not emulate hardware roots of trust. An ex
 
 Performance. Since they ran PARTEMU on an x86 machine, they could not take advantage of ARMv8 hardware virtualization. AFL ran at around 10-25 executions per second for QSEE, OP-TEE, and TEEGRIS, while their performance optimizations for Kinibi enabled 125 executions per second. Thus, a future work is to explore running PARTEMU directly on ARMv8 hardware.
 \newpage
+
+\section{Enhancing example-based code search with functional semantics @The Journal of Systems and Software'20}
+\subsection{Background/Problems}
+As the quality and quantity of open source code increase, effective and efficient search for code implementing certain semantics, or semantics-based code search, has become an emerging need for software developers to retrieve and reuse existing source code. Previous techniques in semantics-based code search encode the semantics of loop-free Java code snippets as constraints and utilize an SMT solver to find encoded snippets that match an input/output (IO) query.
+\subsection{Methods/Techniques}
+The authors present in this article the Quebio approach to semantics-based search for Java methods. Quebio advances the state-of-the-art by supporting important language features like invocation to library APIs and enabling the search to handle more data types like array/List, Set, and Map. Compared with existing approaches, Quebio also integrates a customized keyword-based search that uses as the input a textual, behavioral summary of the desired methods to quickly prune the methods to be checked against the IO examples.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.9\linewidth]{codesearch_semantic_based.png} %
+    \caption{semantics-based search for Java method using IO examples}	
+    \label{fig:codesearch_semantic_based}
+\end{figure}
+\subsection{Results/Evaluation}
+conducted experiments on 47 queries based on real-world questions from programmers to evaluate our approach. The approach was able to find correct methods from a pool of 14,792 candidates for 43 of the queries, spending on average 213.2 seconds on each query. Such results suggest our approach is both effective and efficient.
+\subsection{Limitations/Comments}
+A threat to external validity concerns the limited data types that Quebio supports in its current implementation.While Quebio has the ability to handle API calls in candidate methods, the availability and the complexity of logical formulas encoding those APIs’ semantics can present challenges to Quebio in achieving similar levels of effectiveness and efficiency on other queries. In the future, we plan to extend Quebio to support more data types.
+\newpage
+
+\section{Active Inductive Logic Programming for Code Search @ICSE'20}
+\subsection{Background/Problems}
+Modern search techniques either cannot efficiently incorporate human feedback to refine search results or cannot express structural or semantic properties of desired code.
+\subsection{Methods/Techniques}
+The authors present in this article the Quebio approach to semantics-based search for Java methods. Quebio advances the state-of-the-art by supporting important language features like invocation to library APIs and enabling the search to handle more data types like array/List, Set, and Map. Compared with existing approaches, Quebio also integrates a customized keyword-based search that uses as the input a textual, behavioral summary of the desired methods to quickly prune the methods to be checked against the IO examples.
+
+\subsection{Results/Evaluation}
+On average, ALICE successfully identifies similar code locations with 93\% precision and 96\% recall in 2.7 search iterations. ALICE achieves 100\% precision and 97\% recall in the first dataset, while it achieves 75\% precision and 94\% recall in the second dataset. The reason is that the second dataset contains code fragments that loop over a double array with no write to output operations, which is a semantic constraint imposed by Casper [20] for loop optimization. However, ALICE does not learn predicates that differentiate read and write operations on an array and therefore returns a large number of code fragments that write double arrays in a loop, which leads to low precision.
+compare with critics:
+In six out of seven cases, ALICE achieves the same or better precision and recall with fewer iterations to converge, compared to Critics. In ID 4, ALICE has low precision because the expected code contains a switch statement, which is currently not extracted by ALICE as a logic fact. Extending current logic predicates to support more syntactic constructs remain as future work.
+\subsection{Limitations/Comments}
+we generate facts based on structural and intra-procedural control flow properties. Other types of analysis such as dataflow analysis or aliasing analysis could be used in identifying similar snippets. In addition, the query language itself can be extended to make it easier to capture the properties of desired code. For example, by introducing negations in the query language,a user can specify atoms that should not be included. There could be specializations that strictly require negations. However, in our experiments, empirically, we are always able to find a pattern without negations. As mentioned in Section III-D, our learning process is monotonic and to learn a different query, a user may need to start over. To overcome this, we may need backtracking and investigate new search algorithms that generalize and specialize the query in a different way.
+\newpage
+
+\section{LTRWES:A new framework for security bug report detection @Information and Software Technology'20}
+\subsection{Background/Problems}
+it is important to identify SBRs quickly and accurately among bug reports (BRs) that have been disclosed in bug tracking systems.Although a few methods have been already proposed for the detection of SBRs, challenging issues still remain due to noisy samples, class imbalance and data scarcity.
+\subsection{Methods/Techniques}
+LTRWES is a content-based data filtering and representation framework that has several desirable properties not shared in other methods. 
+Firstly, it exploits ranking model to efficiently filter non-security bug reports (NSBRs) that have higher content similarity with respect to SBRs. 			
+Secondly, it applies word embedding technology to transform the rest of NSBRs, together with SBRs, into low-dimensional real-value vectors
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.9\linewidth]{security_bug_report_detection.png} %
+    \caption{the general framework of security bug report detection}	
+    \label{fig:security_bug_report_detection}
+\end{figure}
+\subsection{Results/Evaluation}
+The highest g-measure for each project is obtained by LTRWES. LTRWES outperforms FARSEC on average by 16.7\% and 22.4\% in gmeasure for WPSP and CPSP respectively
+LTRWES outperforms FARSEC by 25.4\% and 54.5\% on average in recall for WPSP and CPSP.
+\subsection{Limitations/Comments}
+Our future work includes: 1) develop an improved method that use more projects as sources to further improve the performance of crossproject SBRs prediction, 2) combine textual information with side information in bug reports (such as product, component) to improve the performance of SBRs prediction, 3) develop more effective methods to reduce the false positive rate while maintaining high true positive rate in detecting security bug reports, and 4) adopt other hyperparameter tuning methods to further improve the performance of prediction models.
+\newpage
 \end{document}
