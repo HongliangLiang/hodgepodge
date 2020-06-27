@@ -541,10 +541,16 @@ Secondly, it applies word embedding technology to transform the rest of NSBRs, t
     \label{fig:security_bug_report_detection}
 \end{figure}
 \subsection{Results/Evaluation}
-The highest g-measure for each project is obtained by LTRWES. LTRWES outperforms FARSEC on average by 16.7\% and 22.4\% in gmeasure for WPSP and CPSP respectively
+The highest g-measure for each project is obtained by LTRWES. LTRWES outperforms FARSEC on average by 16.7\% and 22.4\% in gmeasure for WPSP and CPSP respectively. 
 LTRWES outperforms FARSEC by 25.4\% and 54.5\% on average in recall for WPSP and CPSP.
 \subsection{Limitations/Comments}
-Our future work includes: 1) develop an improved method that use more projects as sources to further improve the performance of crossproject SBRs prediction, 2) combine textual information with side information in bug reports (such as product, component) to improve the performance of SBRs prediction, 3) develop more effective methods to reduce the false positive rate while maintaining high true positive rate in detecting security bug reports, and 4) adopt other hyperparameter tuning methods to further improve the performance of prediction models.
+Our future work includes: 
+\begin{itemize}
+\item  develop an improved method that use more projects as sources to further improve the performance of crossproject SBRs prediction, 
+\item  combine textual information with side information in bug reports (such as product, component) to improve the performance of SBRs prediction, 
+\item  develop more effective methods to reduce the false positive rate while maintaining high true positive rate in detecting security bug reports, 
+\item  adopt other hyperparameter tuning methods to further improve the performance of prediction models.
+\end{itemize}
 \newpage
 
 \section{Search-Based Test and Improvement of Machine-Learning-Based Anomaly Detection Systems @ISSTA'19}
@@ -553,21 +559,20 @@ the live learning mechanism,progressively injecting small portions of abnormal d
 \subsection{Methods/Techniques}
 \begin{itemize}
 	\item \textbf{Search-Based Test of IDS(intrusion detection systems):}
-          --Genotype;
-          --Fitness function;(the distance between target and the closest cluster centroid and minimizing the consumed time budget)
-         --Selectors ( keeps the best individuals out of samples of three)
+          --Genotype;\\
+          --Fitness function;(the distance between target and the closest cluster centroid and minimizing the consumed time budget)\\
+         --Selectors ( keeps the best individuals out of samples of three)\\
          --alterers(single-point crossover with a 0.2 recombination probability, while gene mutation in the offspring occurs with a probability of 0.15)
     \item \textbf{Search-Based Improvement of IDS:}
-          --Genotype;
-          --Fitness function(fastest detection time, minimizing resources);
+          --Genotype;\\
+          --Fitness function(fastest detection time, minimizing resources);\\
           --Selectors and alterers
 	\item \textbf{Co-Evolution of Attacks and Defences:}	  
 \end{itemize}
 
 \subsection{Results/Evaluation}
-\textbf{dataset:}4SICS Geek Lounge dataset, contains 18 hours of real SCADA
-traffic data. detecting DoS training attacks over a network
-\textbf{results:}The defences resulting from the highest iterations detected 49 attacks out of 50.
+\textbf{dataset:} 4SICS Geek Lounge dataset, contains 18 hours of real SCADA traffic data. detecting DoS training attacks over a network.
+\textbf{results:} The defences resulting from the highest iterations detected 49 attacks out of 50.
 \subsection{Limitations/Comments}
 \begin{itemize}
 	\item We design a testing framework based on search algorithms that, given an IDS, can generate a test (i.e. a training attack scheme) to deceive the IDS. We instantiate this framework in a denial-of-service attack scenario, where a training attack consists of unnoticed, successive increases in data rate. 
@@ -581,17 +586,143 @@ traffic data. detecting DoS training attacks over a network
 users must configure the static tools with lists of security-relevant methods (Srm) that are relevant to their development context.aids analysis users in detecting Srm.
 \subsection{Methods/Techniques}
 \begin{itemize}
-	\item \textbf{Features:}uses a set of binary features that evaluate certain properties of the methods,constructs a feature matrix ; identified 25 feature types, instantiated as 206 concrete features，\textbf{Classifiers:}Support Vector Machine (SVM), Bayes Net, Naive Bayes, Logistic
-Regression, C4.5, Decision Stump, and Ripper
-    \item  take user feedback into account, allowing developers to adapt SWAN to the code base
+	\item \textbf{Features:} uses a set of binary features that evaluate certain properties of the methods, constructs a feature matrix; identified 25 feature types, instantiated as 206 concrete features, \textbf{Classifiers:} Support Vector Machine (SVM), Bayes Net, Naive Bayes, Logistic Regression, C4.5, Decision Stump, and Ripper.
+  \item  take user feedback into account, allowing developers to adapt SWAN to the code base.
 \end{itemize}
 
 \subsection{Results/Evaluation}
-\textbf{datsets:}twelve popular Java frameworks
-\textbf{results:}SWAN achieves an average precision of 0.826, which is better or comparable to existing approaches.SWANAssist requires a relatively low effort from the developer to significantly improve its precision.
+\textbf{datsets:} twelve popular Java frameworks
+\textbf{results:} SWAN achieves an average precision of 0.826, which is better or comparable to existing approaches. SWANAssist requires a relatively low effort from the developer to significantly improve its precision.
 
 \subsection{Limitations/Comments}
 It is possible to improve the precision of static analyses by providing more granular Srm information. Not only the methods themselves are important, which objects they affect can also be important
-(i.e., which parameter, static variable, return variable, or base object).Additionally, we plan to extend SWAN and SWANAssist to support a larger number of CWEs. We also plan to improve SWAN’ training set in a more systematic manner, to ensure a better precision of the approach, and develop a better strategy to handle potentially problematic methods in SuggestSWAN
+(i.e., which parameter, static variable, return variable, or base object). Additionally, we plan to extend SWAN and SWANAssist to support a larger number of CWEs. We also plan to improve SWAN’ training set in a more systematic manner, to ensure a better precision of the approach, and develop a better strategy to handle potentially problematic methods in SuggestSWAN.
+\newpage
+
+\section{P2IM: Scalable and Hardware-independent Firmware Testing via Automatic Peripheral Interface Modeling @Security'20}
+\subsection{Background/Problems}
+Software vulnerabilities cause the majority of attacks on MCU devices, resulting in not only digital but also physical damages. Dynamic testing or fuzzing of embedded firmware is severely limited by hardware-dependence and poor scalability, partly contributing to the widespread vulnerable IoT devices. There are four open challenges that prevent fuzzers for computer software from being effective on firmware: Hardware Dependence; Wide Range of Peripherals; Diverse OS/System Designs; Incompatible Fuzzing Interfaces.
+\subsection{Methods/Techniques}
+The authors design a framework that supports fuzzers as drop-in components to test firmware in a scalable and hardware-independent fashion.  The framework aims to solve the MCU-imposed fuzzing challenges while allowing fuzzers to focus on performing and improving their own job (i.e., generating inputs and finding bugs). 
+
+The approach is novel in that it neither relies on any hardware nor emulates peripherals. They introduce a form of approximate MCU emulation for supporting firmware testing and fuzzing. More importantly, they provide a method to automatically generate approximate emulators based on firmware binaries. The approach is inspired by the observation that firmware can execute on an emulator without real or fully emulated peripherals, as long as the emulator provides the firmware with acceptable inputs from peripherals when needed. Such inputs do not have to be the same as what a real peripheral would produce. But they do need to pass firmware’s internal checks to avoid disrupting firmware execution. For a given firmware, their approximate emulator uses a generic processor/ISA emulator (e.g., one for ARM Cortex-M) and a model, automatically built for the firmware, that captures what constitutes an acceptable input for each peripheral accessed by the firmware.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\linewidth]{p2im.png} %
+    \caption{P2IM's workflow.}	
+    \label{fig:p2im}
+\end{figure}
+\subsection{Results/Evaluation}
+They implemented the framework using QEMU as the base processor emulator. Their implementation includes 2,202 lines of C code added to QEMU (mostly for dynamic firmware execution instrumentation), 173 lines of C code for fuzzer integration, and 1,199 lines of Python code for the explorative execution part of P2IM. They use AFL as the drop-in fuzzer.  AFL’s emulation mode (used for fuzzing un-instrumented binaries) only supports user-mode emulation, which is incompatible with firmware emulation [13]. TriforceAFL [40] builds a bridge for AFL to be connected to the full system emulation mode of QEMU. They used TriforceAFL’s code when implementing the fuzzer integration part of their framework.
+
+They evaluated the framework using 70 sample firmware and 10 firmware from real devices, including a drone, a robot,and a PLC. It successfully executed 79\% of the sample firmware without any manual assistance. They also performed a limited fuzzing test on the real firmware, which unveiled 7 unique unknown bugs.
+\subsection{Limitations/Comments}
+P2IM models the processorperipheral interfaces, including registers and interrupts. It does not model Direct Memory Access (DMA), which allows peripherals to directly access RAM and in turn provide input to firmware. The lack of DMA support is a limitation of the work.
+
+They analyzed 3 MCUs that use non-ARM architectures for IoT devices: ATmega328P (AVR), PIC32MX440F256H (MIPS) and FE310-G000 (RISC-V).  P2IM and the current abstract model can be extended to handle these architectural differences and in turn support these non-ARM MCU architectures.
+
+Other types of dynamic firmware analysis that do not require fully accurate output from firmware can use the framework to achieve hardware-independence and scalability. For instance, data or code reachability analysis, such as taint analysis and certain debugging tasks, can benefit from their framework. In particular, concolic firmware execution can use their framework to generate more realistic concrete inputs (i.e., non-crashing/stalling), reduce the number of symbolic values, and avoid some infeasible code paths.
+\newpage
+\section{HALucinator: Firmware Re-hosting Through Abstraction Layer Emulation @Security'20}
+\subsection{Background/Problems}
+Given the increasing ubiquity of online embedded devices, analyzing their firmware is important to security, privacy, and safety. The tight coupling between hardware and firmware and the diversity found in embedded systems makes it hard to perform dynamic analysis on firmware.
+\subsection{Methods/Techniques}
+Firmware developers regularly develop code using abstractions, such as Hardware Abstraction Layers (HALs), to simplify their job.  Therefore, the authors leverage such abstractions as the basis for the re-hosting and analysis of firmware. By providing high-level replace- ments for HAL functions (a process termed \emph{High-Level Emulation} – HLE), they decouple the hardware from the firmware.  This approach works by first identifying the library functions in a firmware sample, through binary analysis, and then providing generic implementations of these functions in a full-system emulator.
+
+They present these ideas in a prototype system, HALucinator (Fig.\ref{fig:halucinator}), able to re-host firmware, and allow the virtual device to be used normally. First, they introduce extensions to existing library matching techniques that are needed to identify library functions in binary firmware, to reduce collisions, and for inferring additional function names. Next, they demonstrate the re-hosting process, through the use of simplified \emph{handlers} and \emph{peripheral models}, which make the process fast, flexible, and portable between firmware samples and chip vendors.
+
+Specifically,  LibMatch creates a database of HAL functions to match by extracting the control-flow graph of the unlinked binary object files of the libraries, plus an In- termediate Representation (IR) of their code. It then performs the following steps to successively refine possible matches: Statistical comparison; Basic block comparison; and Contextual matching.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\linewidth]{halucinator.png} %
+    \caption{HALucinator's arch.}	
+    \label{fig:halucinator}
+\end{figure}
+\subsection{Results/Evaluation}
+The authors demonstrate the practicality of HLE for security analysis, by supplementing HALucinator with AFL fuzzer, to locate multiple previously-unknown vulnerabilities in firmware middleware libraries.  they use 16 firmware samples provided with different development boards from Atmel, NXP, and STM.  These samples were chosen for their diverse and complex hardware interactions, including serial communication, file systems on SD cards, Ethernet, 6LoWPAN, and WiFi.  They also contain a range of sophisticated application logic, including wireless messaging over 6LoWPAN, a Ladder Logic interpreter, and an HTTP Server with a Common Gateway Interface (CGI). The set of included libraries is also diverse, featuring STMicroelectronics’ STM32-Cube HAL [53], NXP’s MCUXpresso [42], Atmel’s Advanced Software Framework (ASF) [16], lwIP [37], FatFS [27], and Contiki-OS [25].
+Available at: \url{https://github.com/embedded-sec/halucinator} based on angr+Avatar$^2$, and \url{https://github.com/ucsb-seclab/hal-fuzz} based on AFL-Unicore.
+\subsection{Limitations/Comments}
+HALucinate requires the firmware use a HAL, and the HAL must be available to the analyst (e.g., either open source, or part of the microcontroller’s SDK). The compilation environment for the LibMatch database must be similar to the compilation environment for the firmware, and QEMU must support the microcontroller architecture.  Even when these conditions are met, handlers and peripheral models must be developed for each HAL.  If a HAL is not used in a firmware sample, or is unavailable to the analyst, then LibMatch cannot be used for identifying interfaces usable for high-level emulation. 
+
+The effectiveness of LibMatch, especially when the compiler or library versions used is unknown, is limited. This limitation comes from function matching techniques’ inability to cope with compiler-induced variations in generated code. 
+\newpage
+\section{KOOBE: Towards Facilitating Exploit Generation of Kernel Out-Of-Bounds Write Vulnerabilities @Security'20}
+\subsection{Background/Problems}
+The monolithic nature of modern OS kernels leads to a constant stream of bugs being discovered. It is often unclear which of these bugs are worth fixing, as only a subset of them may be serious enough to lead to security takeovers (i.e., privilege escalations). Therefore, researchers have recently started to develop automated exploit generation techniques (for UAF bugs) to assist the bug triage process. 
+\subsection{Methods/Techniques}
+The authors investigate another top memory vulnerability in Linux kernel — out-of-bounds (OOB) memory write from heap. They design KOOBE to assist the analysis of such vulnerabilities based on two observations: (1) Surprisingly often, different OOB vulnerability instances exhibit a wide range of capabilities.  (2) Kernel exploits are multi-interaction in nature (i.e., multiple syscalls are involved in an exploit) which allows the exploit crafting process to be modular. Specifically, they focus on the extraction of capabilities of an OOB vulnerability which will feed the subsequent exploitability evaluation process. Our system builds on several building blocks, including a novel capability-guided fuzzing solution to uncover hidden capabilities, and a way to compose capabilities together to further enhance the likelihood of successful exploitations. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{koobe-flow.png} %
+    \caption{Koobe's workflow.}	
+    \label{fig:koobe-flow}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{koobe.png} %
+    \caption{Koobe's architecture}
+    \label{fig:koobe}
+\end{figure}
+\subsection{Results/Evaluation}
+They have implemented a prototype of Koobe on top of the popular kernel fuzzer Syzkaller, binary symbolic execution framework S2E and binary analysis engine angr.  It consists of 7,510 LOC of C++ to the S2E for capability summarization and exploitability evaluation, 2,271 LOC of python based on Angr to analyze vulnerabilities, and 1,106 LOC of Go to explore diverging paths with fuzzing and synthesize exploits. Availabe at: \url{https: //github.com/seclab-ucr/KOOBE}
+
+They demonstrate the applicability of KOOBE by exhaustively analyzing 17 most recent Linux kernel OOB vulnerabilities (where only 5 of them have publicly available exploits), for which KOOBE successfully generated candidate exploit strategies for 11 of them (including 5 that do not even have any CVEs assigned). Subsequently from these strategies, they are able to construct fully working exploits for all of them.
+\subsection{Limitations/Comments}
+KOOBE does not yet produce an end-to-end exploit fully automatically. Through this study, they identify and automate the key procedures of crafting kernel heap OOB write exploits. To close the entire automation loop, they also point out several interesting places: (1) Exploring heap feng shui. Our system leverages existing heap feng shui strategies without the ability to handle complex scenarios. Prior work [28] has shed some light on this problem in the context of user applications. Following the same direction, they could automate this process by applying fuzzing. (2) Turning IP-hijacking primitives into arbitrary code execution and privilege escalation. The recent work [56] proposes a novel solution to bypass SMEP and SMAP, given an IP hijacking primitive. By integrating this technique, leveraging side channels capable of defeating KASLR, or relying on another information disclosure vulnerability, Koobe could produce end-to-end exploits. (3) Probability configurations for fuzzing. They currently choose each queue with equal probability during fuzzing. It is a trade-off between focusing on seeds of interest and exploring uncovered paths that do not offer new capabilities yet but lead to long-term benefit. A higher probability for selecting the seeds increasing coverage allows us to quickly explore uncovered code but it also slows down finding new seeds extending existing capabilities since uncovered code is mostly irrelevant and thus a substantial amount of seeds do no contribute given the large codebase of Linux kernel. Future work would be to explore different probability configuration and design approaches to dynamically adjust it during the fuzzing execution.  
+
+Although they only consider defenses deployed in practice in this work, some fine-grained randomization based defenses [3, 14, 42] would break some of their assumptions in generating exploits (e.g., DieHard [14] and SLAB/SLUB freelist randomization [3] make heap feng shui much less predictable). Nevertheless, they believe such defenses are not bulletproof. For example, randomization-based solutions could potentially be circumvented by CPU side channels that can be integrated into Koobe.  
+\newpage
+
+\section{Multi-Modal Attention Network Learning for Semantic Source Code Retrieval @ASE'2019}
+\subsection{Background/Problems}
+The paper is motivated by a paper  “Deep code search,” in ICSE‘2018. \\
+Code retrieval techniques and tools have been playing a key role in facilitating software developers to retrieve existing code fragments from available open-source repositories given a user query (e.g., a short natural language text describing the functionality for retrieving a particular code snippet). However, two main issues hinder them to accurately retrieve satisfiable code fragments from largescale repositories when answering complicated queries. First, the existing approaches only consider shallow features of source code such as method names and code tokens, but ignoring structured features such as abstract syntax trees (ASTs) and control-flow graphs (CFGs) of source code, which contains rich and welldefined semantics of source code. Second, although the deep learning-based approach performs well on the representation of source code, it lacks the explainability, making it hard to interpret the retrieval results and almost impossible to understand which features of source code contribute more to the final results.
+\subsection{Methods/Techniques}
+The paper proposes MMAN, a novel Multi-Modal Attention Network for semantic source code retrieval. A comprehensive multi-modal representation (Fig. \ref{fig:mman}) is developed for representing unstructured and structured features of source code, with one LSTM for the sequential tokens of code, a Tree-LSTM for the AST of code and a GGNN (Gated Graph Neural Network) for the CFG of code. Furthermore, a multi-modal attention fusion layer is applied to assign weights to different parts of each modality of source code and then integrate them into a single hybrid representation. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{mman.png} %
+    \caption{MMAN's arch.}	
+    \label{fig:mman}
+\end{figure}
+\subsection{Results/Evaluation}
+Comprehensive experiments and analysis on a large-scale real-world dataset (28,527 commented C methods from github) show that the proposed model can accurately retrieve code snippets and outperforms the state-of-the-art methods (i.e., CodeHow, DeepCS).
+\subsection{Limitations/Comments}
+We evaluate MMAN using only two metrics, i.e., SuccessRate@R and MRR, which are both standard evaluation metrics in information retrieval. We do not use precision at some cutoff (Precision@k), since the relevant results need to be labelled manually.  However, a human evaluation is also needed for the sake of fair comparison with DeepCS.
+
+Another limitation lies in the extensibility of our proposed approach. Our model needs to be trained on a large scale of corpus, which is collected from online platforms such as GitHub. Since the writing style of different programmers may differ greatly, lots of efforts will be put into this step.  In this paper, we have defined many regular expressions to extract the samples that meets our condition, at the same time, many samples are filtered. Furthermore, the CFG can only be extracted from a whole program. Therefore, it’s difficult to extend our multi-modal code representation model to some contexts where the CFG are unable to be extracted, such as many code snippets from StackOverflow.
+
+Future work: 1)conduct comprehensive experiments on other dataset of different language such as Java or Python, as well as human evaluation to further verify the effectiveness of our proposed approach.  2)it’s promising to explore the potentiality of multimodal code representation on some other software engineering tasks such as code summarization and code clone detection.
+\newpage
+\section{Scalable and Practical Locking with Shuffling @SOSP'2019 }
+\subsection{Background/Problems}
+Locks are an essential building block for high-performance multicore system software. To meet performance goals, lock algorithms have evolved towards specialized solutions for architectural characteristics (e.g., NUMA). However, in practice, applications run on different server platforms and exhibit widely diverse behaviors that evolve with time (e.g., number of threads, number of locks). This creates performance and scalability problems for locks optimized for a single scenario and platform. For example, popular spinlocks suffer from excessive cache-line bouncing in NUMA systems, while scalable, NUMA-aware locks exhibit sub-par single-thread performance.
+
+\subsection{Methods/Techniques}
+Locks not only serialize data access, but also add their overhead, directly impacting application scalability. Looking at the evolution of locks and their use, we identify four main factors that any practical lock algorithm should consider.  These factors are critical in achieving good performance in current architectures, but their relative importance can vary not only across architectures, but also across applications with varying requirements. Therefore, we should holistically consider all four factors when designing a lock algorithm.
+
+\begin{enumerate}
+\item A lock algorithm should amortize data movement from both the lock structure and the data inside the critical section, to hide non-uniform latency and minimize coherence traffic.
+\item For the best performance in all scenarios, a lock algorithm should adapt to varying thread contention.
+\item A lock algorithm should consider the mapping between threads and cores and whether cores are over-subscribed.
+\item A lock algorithm should consider memory foot-print, as it affects both the adoption of the lock and applications performance.
+\end{enumerate}
+
+We then propose a new technique, shuffling (Fig. \ref{fig:shfllock}), that can dynamically accommodate all these factors, without slowing down the critical path of the lock. The key idea of shuffling is to re-order the queue of threads waiting to acquire the lock in accordance with some pre-established policy. For best performance, this work is done off the critical path, by the waiter threads. Using shuffling, we demonstrate how to achieve NUMA-awareness and implement an efficient parking/wake-up strategy, without any auxiliary data structure, mostly off the critical path.  
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{shfllock.png} %
+    \caption{shflLock's example.}	
+    \label{fig:shfllock}
+\end{figure}
+\subsection{Results/Evaluation}
+The evaluation shows that our family of locks based on shuffling improves the throughput of real-world applications up to 12.5$\times$, with impressive memory footprint reduction compared with the recent lock algorithms. For instance,  ShflLocks improve performance on two fronts: they improve throughput by 1.2–1.6$\times$ while reducing the lock overhead by 35.4–95.8\% at 192 threads.  Availabe at \url{https://github.com/sslab-gatech/shfllock}.
+\subsection{Limitations/Comments}
+\begin{itemize}
+\item Shuffling mechanism opens new opportunities to implement different policies based on the hardware behavior or the requirements of the application. For example, we can devise policies to support non-inclusive caches [41] or a multi-level NUMA hierarchy [43]. In this case, the shuffler optimizes the waiting list according to the NUMA node, but it also keeps track of the number of hops. 
+\item Shuffling can also be used to avoid the priority inversion issue [28] or to devise approaches for applications that require occupancy-aware scheduling, (i.e., prioritize lock-acquire based on the time spent inside the critical section). 
+\item Shuffling can also be beneficial in designing an adaptive readers-writer lock, in which a waiter switches among centralized, per-socket or per-CPU reader indicators, depending on workload and thread contention.
+\end{itemize}
 \newpage
 \end{document}
