@@ -19,6 +19,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{listings}
+\usepackage{xcolor}
 \usepackage[colorlinks,linkcolor=black,anchorcolor=blue,citecolor=green]{hyperref}%
 %for pdftex
 %\setlength{\pdfpageheight}{160mm}
@@ -39,13 +40,27 @@
 
 \let\phone=1 %-------------生成适合手机上阅读的pdf文件；否则注释此行。------------------
 \ifx\phone1
-\usepackage[centering,margin=0.5cm]{geometry}
-\geometry{papersize={12cm,20cm}} 
+\usepackage[centering,margin=1.5cm]{geometry}
+\geometry{papersize={15cm,20cm}} 
 \else
 \usepackage[a4paper,margin=2cm]{geometry}%,left=2cm,right=2cm,top=1cm,bottom=1cm
 \twocolumn
 \fi
 
+\linespread{1.2}
+\lstset{
+    language=C,
+    breaklines=true ,
+    keywordstyle=\color{blue},
+    commentstyle=\color{violet},
+    captionpos=b,
+    numbers=left,
+    numbersep=1em,
+    xleftmargin=3em,
+%    columns=flexible,
+    basicstyle=\small,
+    numberstyle=\scriptsize,
+}
 
 %for dvips
 %\special{papersize=80mm,160mm} %dvi 没有纸张大小的概念，只有转换成 .ps、.pdf 文件时，才由对应的输出驱动（如 Dvips、dvipdfmx 或 pdfTeX 等）设置输出纸张大小。
@@ -53,20 +68,66 @@
 %不过，在 TeX 代码里面用特定输出驱动的 special 命令，可以提示这些输出驱动选择纸张，一般用 geometry 宏包的话，就会处理这个问题。而 graphics 宏包后台对 pdfTeX 也有相应的代码（在 pdftex.def 中）。
 
 
-\title{\textbf{Reading Notes}}%文献阅读笔记
-\author{\texttt{TSISers} 
-    \\ \copyright Trusted Software and Intelligent System Lab.}
-\date{2020/01/21}
+%\title{\textbf{Reading Notes}}%文献阅读笔记
+%\author{\texttt{TSISers} 
+%    \\ \copyright Trusted Software and Intelligent System Lab., BUPT}
+%\date{2020/01/21}
+%\begin{figure}
+%  \includegraphics[width=0.25\textwidth]{tsislogo}
+%  \caption{Enjoying our time in TSIS Lab.}
+%  \label{fig:tsis}
+%\end{figure}
 
 \begin{document}
+\begin{titlepage}
+ \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+	\center 
 
-\maketitle 
+%	\quad\\[1.5cm]
+%    \includegraphics[width=3cm]{tsislogo}
+%	\textsl{\Large Beijing University of Posts and Communications }\\[0.5cm] 
+%	\textsl{\large School of Computer Science}\\[0.5cm] 
+%	\makeatletter
+	\HRule \\[0.4cm]
+	{\huge \bfseries Reading Notes}\\[0.4cm] 
+	\HRule \\[1.5cm]
+  \vspace{2em}
+    \center
+    \includegraphics[scale=0.005]{tsislogo.jpg}\\
+      \vspace{2em}
+%	\begin{minipage}{0.4\textwidth}
+%		\begin{flushleft} \large
+%			\emph{Author:}\\
+		{\Large \bfseries 	Trusted Software and Intelligent System Lab., BUPT}\\
+     
+%		\end{flushleft}
+%	\end{minipage}
+%	~
+%	\begin{minipage}{0.4\textwidth}
+%		\begin{flushright} \large
+%			\emph{Supervisor:} \\
+%			\textup{Prof Liang}
+%		\end{flushright}
+%	\end{minipage}\\[3cm]
+%	\makeatother
+%	{\large An Assignment submitted for the UCAS:}\\[0.5cm]
+%	{\large \emph{Place Your Course Code and Course Name at Here}}\\[0.5cm]
+\vspace{2em}
+	{\large 2020/01/21}\\[2cm] 
+
+	\vfill 
+\end{titlepage}
+
+
+
+
+%\maketitle 
 \tableofcontents
 \clearpage
 
 
 
-\section{SAVIOR: Towards Bug-Driven Hybrid Testing @S\&P'20
+\section{SAVIOR: Towards Bug-Driven Hybrid Testing \\@S\&P'20
 }
 
 \subsection{Background/Problems}
@@ -80,7 +141,8 @@ The authors propose SAVIOR (Fig.\ref{fig:savior}), a new hybrid testing framewor
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{savior.png} %
+    \includegraphics[width=\linewidth]{fig-savior} 
+%    \includegraphics[width=\linewidth]{savior.png} %
     \caption{SAVIOR's arch.}	
     \label{fig:savior}
 \end{figure}
@@ -96,7 +158,7 @@ Evaluation shows that the bug-driven approach outperforms mainstream hybrid test
     \item Hybrid testing in SAVIOR is same with hybrid fuzzing in Driller and Berry. Both tools run fuzzing for code exploration and invoke concolic execution only on hard-to-solve branches, which takes advantage of both fuzzer's efficiency and concolic executor's constraint solving.
 \end{itemize}
 \newpage
-\section{Fuzzing File Systems via Two-Dimensional Input Space Exploration @S\&P'19}
+\section{Fuzzing File Systems via Two-Dimensional Input Space Exploration \\@S\&P'19}
 \subsection{Background/Problems}
 File systems are too big and too complex to be bug free. Nevertheless, to find bugs in file systems, regular stress-testing tools and formal checkers are limited due to the ever-increasing complexity of both file systems and OSes. Thus, fuzzing becomes a preferable choice, as it does not need much knowledge about a target. However, three prominent issues of existing file systems fuzzers exist: (1) fuzzing a large blob image is inefficient; (2) fuzzers do not exploit the dependence between a file system image and file operations; (3) fuzzers use aging OSes and file systems, which results in irreproducible bugs.
 
@@ -121,7 +183,7 @@ The authors evaluate JANUS on 8 file systems and found 90 bugs in the upstream L
 \end{itemize}
 \newpage
 
-\section{REDQUEEN: Fuzzing with Input-to-State Correspondence @NDSS'19}
+\section{REDQUEEN: Fuzzing with Input-to-State Correspondence \\@NDSS'19}
 \subsection{Background/Problems}
 Two common problems of fuzzing are magic numbers and (nested) checksums (see Listing \ref{fuzzissues}). Computationally expensive methods such as taint tracking and symbolic execution are typically used to overcome such roadblocks. Unfortunately, such methods often require access to source code, a rather precise description of the environment (e.g., behavior of library calls or the underlying OS), or the exact semantics of the platform's instruction set, and thus such methods are the polar opposite of the approach pioneered by AFL: to a large extend, AFL's success is based on the fact that it makes few assumptions about the program's behavior.
 \begin{lstlisting}[label=fuzzissues,language={[ANSI]C}, caption={Roadblocks for feedback-driven fuzzing.}]
@@ -150,7 +212,7 @@ REDQUEEN is the first method to find more than 100\% of the bugs planted in LAVA
 Fuzzers from the AFL family have three important components: (i) the queue, (ii) the bitmap, and (iii) the mutators. The queue is where all inputs are stored. During the fuzzing process, an input is picked from the queue, fuzzed for a while, and, eventually, returned to the queue. After picking one input, the mutators perform a series of mutations. After each step, the mutated input is executed. The target is instrumented such that the coverage produced by the input is written into a bitmap. If the input triggered new coverage (and, therefore, a new bit is set in the bitmap), the input is appended to the queue.  Otherwise, the mutated input is discarded. The mutators are organized in different stages. The first stages are called the \emph{deterministic stages}. These stages are applied once, no matter how often the input is picked from the queue. They consist of a variety of simple mutations such as “try flipping each bit”. When the deterministic stages are finished or an input is picked for the second time, the so called \emph{havoc phase} is executed. During this phase, multiple random mutations are applied at the same time at random locations. Similarly, if the user provided a dictionary with interesting strings, they are added in random positions. Linked to the havoc stage is the \emph{splicing stage}, in which two different inputs are combined at a random position.}
 \newpage
 
-\section{Grimoire: Synthesizing Structure while Fuzzing @Security'19 }
+\section{Grimoire: Synthesizing Structure while Fuzzing \\@Security'19 }
 \subsection{Background/Problems}
 One common challenge for current fuzzing techniques are programs which process highly structured input languages such as interpreters, compilers, text-based network protocols or markup languages. Typically, such inputs are consumed by the program in two stages: parsing and semantic analysis. If parsing of the input fails, deeper parts of the target program—containing the actual application logic—fail to execute; hence, bugs hidden “deep” in the code cannot be reached. Even advanced feedback fuzzers— such as AFL—are typically unable to produce diverse sets of syntactically valid inputs.
 
@@ -162,7 +224,7 @@ The authors present the design and implementation of Grimoire (Fig.\ref{fig:grim
  Their approach is based on two key observations: First, they can use code coverage feedback to automatically infer structural properties of the input language. Second, the precise and “correct” grammars generated by previous approaches are actually unnecessary in practice: since fuzzers have the virtue of high test case throughput, they can deal with a significant amount of noise and imprecision. In fact, in some programs (such as Boolector) with a rather diverse set of input languages, the additional noise even benefits the fuzz testing. In a similar vein, there are often program paths which can only be accessed by inputs outside of the formal specifications, e. g., due to incomplete or imprecise implementations or error handling code.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{grimoire.png} %
+    \includegraphics[width=0.7\linewidth]{grimoire.png} %
     \caption{Advantage of Grimoire.}	
     \label{fig:grimoire}
 \end{figure}
@@ -177,7 +239,7 @@ The approach has significant difficulties with more syntactically complex constr
 
 The generalization approach might be too coarse in many places. Obtaining more precise rules would help uncovering deeper parts of the target application in cases where multiple valid statements have to be produced. 
 \newpage
-\section{Intriguer: Field-Level Constraint Solving for Hybrid Fuzzing @CCS'19}
+\section{Intriguer: Field-Level Constraint Solving for Hybrid Fuzzing \\@CCS'19}
 \subsection{Background/Problems}
 Hybrid fuzzing is promising in light of the recent performance improvements in concolic engines. However, there is room for further improvement: symbolic emulation is still slow, unnecessary constraints dominate solving time, resources are overly allocated, and hard-to-trigger bugs are missed.
 
@@ -186,7 +248,7 @@ The authors present a new hybrid fuzzer named Intriguer (Fig.\ref{fig:intriguer}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{intriguer.png} %
+    \includegraphics[width=0.9\linewidth]{intriguer.png} %
     \caption{Intriguer's arch.}	
     \label{fig:intriguer}
 \end{figure}
@@ -204,14 +266,14 @@ The current version of Intriguer does not consider the control-flow dependency, 
 and conditional jump.
 \newpage
 
-\section{FIRM-AFL: High-Throughput Greybox Fuzzing of IoT Firmware via Augmented Process Emulation @Sec'19}
+\section{FIRM-AFL: High-Throughput Greybox Fuzzing of IoT Firmware via Augmented Process Emulation \\@Sec'19}
 \subsection{Background/Problems}
 Two fundamental problems in \emph{IoT fuzzing} due to its strong dependency on the actual hardware configuration: 1) Compatibility issues by enabling fuzzing for POSIX-compatible firmware that can be emulated in a system emulator. 2) Performance bottleneck caused by system-mode emulation. 
 \subsection{Methods/Techniques}
 A novel technique called augmented process emulation. By combining system-mode emulation  (high generality and low efficiency)  and user-mode emulation  (low generality and high efficiency) in a novel way, augmented process emulation provides high compatibility as system-mode emulation and high throughput as user-mode emulation.  The program to be fuzzed is mainly run in user-mode emulation to achieve high efficiency, and switches to full system emulation only when necessary to ensure correct program execution. 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{firm-afl.png} %width=\linewidth
+    \includegraphics[width=0.9\linewidth]{firm-afl.png} %width=\linewidth
     \caption{firm-afl's arch.}	
     \label{fig:firmafl}
 \end{figure}
@@ -225,7 +287,7 @@ FIRM-AFL only supports the following CPU architectures: mipsel, mipseb and armel
 \clearpage
 
 \section{RVFUZZER: Finding Input Validation Bugs in Robotic Vehicles Through
-Control-Guided Testing @Security'19}
+Control-Guided Testing \\@Security'19}
 \subsection{Background/Problems}
 Attack surface of robotic vehicles (RVs) spans multiple aspects, such as (1) physical vulnerabilities of its sensors that enable external sensor spoofing attacks [72,77,80]; (2) traditional “syntactic” bugs in its control program (e.g., memory corruption bugs) that enable remote or trojaned exploits [75]; and (3) control-semantic bugs in its control program that enable attacks via remote control commands.  For attacks exploiting (1) and (2), there have been research efforts in defending against them [30,38,40,50,52,70,76]; whereas those exploiting (3) have not received sufficient attention. 
 
@@ -238,7 +300,7 @@ Our solution to finding input validation bugs – without control program source
 Based on these ideas, they develop RVFUZZER (Fig.\ref{fig:rvfuzzer}), a vetting system for finding input validation bugs in RV control programs through control-guided input mutation. The key insight behind RVFUZZER is that the RV control model, which is the generic theoretical model for a broad range of RVs, provides helpful semantic guidance to improve bug-discovery accuracy and efficiency. Specifically, RVFUZZER involves a control instability detector that detects control program misbehavior, by observing (simulated) physical operations of the RV based on the control model. In addition, RVFUZZER steers the input generation for finding input validation bugs more efficiently, by leveraging results from the control instability detector as feedback. 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{rvfuzzer.png} %
+    \includegraphics[width=0.9\linewidth]{rvfuzzer.png} %
     \caption{rvfuzzer's arch.}	
     \label{fig:rvfuzzer}
 \end{figure}
@@ -251,7 +313,7 @@ There has been no standard safety testing framework created for RVs. We believe 
 
 \newpage
 \section{ProFuzzer: On-the-fly Input Type Probing for Better
-Zero-day Vulnerability Discovery @S\&P'19}
+Zero-day Vulnerability Discovery \\@S\&P'19}
 \subsection{Background/Problems}
 Existing mutation based fuzzers tend to randomly mutate the input of a program without understanding its underlying syntax and semantics.  This information (fields and their semantics) may not be documented and available to the fuzzer, and can be hard to recover without going through an in-depth heavyweight analysis procedure. 
 \subsection{Methods/Techniques}
@@ -272,7 +334,7 @@ Currently, the exploitation mutation procedure requires domain knowledge and man
 
 Review the assumptions that the target application has the following properties. First, its execution is deterministic: that is, given the same input, multiple executions of the application all follow the same execution path and yield the same result. Second, initial valid seed inputs of reasonable size are available. Third, if the validation on certain bytes fails, the execution will quickly terminate, which means that an exceptional execution has a shorter execution path than a normal one. 
 \newpage
-\section{RetroWrite: Statically Instrumenting COTS Binaries for Fuzzing and Sanitization @S\&P'20}
+\section{RetroWrite: Statically Instrumenting COTS Binaries for Fuzzing and Sanitization \\@S\&P'20}
 \subsection{Background/Problems}
 The current state of the art for applying fuzzing or sanitization to binaries is dynamic binary translation, which has prohibitive performance overhead. The alternate technique, static binary rewriting, cannot fully recover symbolization information and hence has difficulty modifying binaries to track code coverage for fuzzing or to add security checks for sanitizers.
 \subsection{Methods/Techniques}
@@ -295,7 +357,7 @@ c) Limitations of ASan-retrowrite: The limitations of ASan-retrowrite on stack a
 d) Obfuscation: To protect intellectual property, some vendors ship obfuscated binaries. Retrowrite does not address obfuscation. Binary unpacking is usually specific to the obfuscation scheme used; and an obfuscated binary may be rewritten by RetroWrite, after it is pre-processed by a de-obfuscation step [57], [58].
 \newpage
 \section{SLAKE: Facilitating Slab Manipulation for Exploiting
-Vulnerabilities in the Linux Kernel @CCS'19}
+Vulnerabilities in the Linux Kernel \\@CCS'19}
 
 \subsection{Background/Problems}
 To determine the exploitability for a kernel vulnerability, a security analyst usually has to manipulate slab and thus demonstrate the capability of obtaining the control over a program counter or performing privilege escalation. However, this is a lengthy process because (1) an analyst typically has no clue about what objects and system calls are useful for kernel exploitation and (2) he lacks the knowledge of manipulating a slab and obtaining the desired layout. In the past, researchers have proposed various techniques to facilitate exploit development. Unfortunately, none of them can be easily applied to address these challenges due to the complexity of the Linux kernel and the dynamics and non-deterministic of slab variations.
@@ -323,7 +385,7 @@ The approach can be used for other open-source OSes (e.g., FreeBSD and Android).
 %    \caption{xx's arch.}	
 %    \label{fig:xx}
 %\end{figure}
-\section{Block Oriented Programming: Automating Data-Only Attacks @CCS'18}
+\section{Block Oriented Programming: Automating Data-Only Attacks \\@CCS'18}
 \subsection{Background/Problems}
 With the widespread deployment of Control-Flow Integrity (CFI), control-flow hijacking attacks, and consequently code reuse attacks, are significantly more difficult. CFI limits control flow to well-known locations, severely restricting arbitrary code execution.  Assessing the remaining attack surface of an application under advanced control-flow hijack defenses such as CFI and shadow stacks remains an open problem.
 \subsection{Methods/Techniques}
@@ -344,7 +406,7 @@ BOPC is limited by the granularity of basic blocks. That is, a combination of ba
 
 BOPC sets several upper bounds defined by user inputs. These configurable bounds include the upper limit of (i) SPL payload permutations (P), (ii) length of continuous blocks (L), (iii) of minimum induced subgraphs extracted from the delta graph (N ), and (iv) dispatcher paths between a pair of functional blocks (K). These upper bounds along with the timeout for symbolic execution, reduce the search space, but prune some potentially valid solutions. The evaluation of higher limits may result in alternate or more solutions being found by BOPC.
 \newpage
-\section{Automatic Heap Layout Manipulation for Exploitation @Security'18}
+\section{Automatic Heap Layout Manipulation for Exploitation \\@Security'18}
 \subsection{Background/Problems}
 As of 2018, the most common approach to solving heap layout manipulation (HLM) problems is manual work by experts.  An analyst examines the allocator’s implementation to gain an understanding of its internals; then, at run-time, they inspect the state of its various data structures to determine what interactions are necessary in order to manipulate the heap into the required layout. The process is complicated by the fact that – when constructing an exploit – one cannot directly interact with the allocator, but instead must use the API exposed by the target program. 
 
@@ -367,7 +429,7 @@ Other three variants of the HLM problem are harder than the one addressed in thi
 Read other references, e.g., [7, 15, 26, 32, 33], for more future works.
 \newpage
 \section{MarkUs: Drop-in use-after-free prevention for
-low-level languages @S\&P'20}
+low-level languages \\@S\&P'20}
 
 \subsection{Background/Problems}
 A variety of techniques have been proposed to mitigate use-after-free vulnerabilities in C and C++. For example, all pointer locations can be logged and then nullified when their data is freed [1], [4], [5], objects allocated with their own page-table entries [6], [7], or probabilistic reuse delays employed [8]–[10]. However, these tend to exhibit both high average- and worst-case overheads in terms of performance and memory utilisation, or have limited coverage.
@@ -382,7 +444,7 @@ MarkUs fails to detect complex use-after-free vulnerabilities involving hidden p
 
 Tagged memory techniques [36,37] can make MarkUs more efficient, by allowing reuse of memory multiple times, based on incrementing the ID tag of each successive allocation, before address space must be quarantined to ensure old IDs have been eliminated and can be reallocated.
 \newpage
-\section{KARONTE: Detecting Insecure Multi-binary Interactions in Embedded Firmware @S\&P'20}
+\section{KARONTE: Detecting Insecure Multi-binary Interactions in Embedded Firmware \\@S\&P'20}
 \subsection{Background/Problems}
 Low-power, single-purpose embedded devices (e.g., routers and IoT devices) have become ubiquitous. While they automate and simplify many aspects of users’ lives, recent large-scale attacks have shown that their sheer number poses a severe threat to the Internet infrastructure. Unfortunately, the software on these systems is hardware-dependent, and typically executes in unique, minimal environments with non-standard configurations, making security analysis particularly challenging.  
 
@@ -405,7 +467,7 @@ Karonte may generate both false positives and false negatives. They are due to t
 
 Though by default, KARONTE finds buffer overflows and denial-of-service vulnerabilities, its design allows an analyst to support different types of vulnerabilities. For instance, an analyst can extend Karonte to find use-after-free bugs by providing a new detection module, such as [16].
 \newpage
-\section{What You Corrupt Is Not What You Crash: Challenges in Fuzzing Embedded Devices @NDSS'18}
+\section{What You Corrupt Is Not What You Crash: Challenges in Fuzzing Embedded Devices \\@NDSS'18}
 \subsection{Background/Problems}
 While common desktop systems have a variety of mechanisms to detect faulty states (e.g., segmentation faults, heap hardening and sanitizers) and to analyze them (e.g., command-line return values or core dumps), embedded devices often lack such mechanisms because of their limited I/O capabilities, constrained cost, and limited computing power.  As a result, \emph{silent memory corruptions} occur more frequently on embedded devices than on traditional computer systems, creating a significant challenge for conducting fuzzing sessions on embedded systems software.
 \subsection{Methods/Techniques}
@@ -427,7 +489,7 @@ The ability to fully emulate arbitrary firmware images is still an open problem.
 
 \newpage
 
-\section{Looking from the Mirror: Evaluating IoT Device Security through Mobile Companion Apps @Security'19}
+\section{Looking from the Mirror: Evaluating IoT Device Security through Mobile Companion Apps \\@Security'19}
 \subsection{Background/Problems}
 Smart home IoT devices have increasingly become a favorite target for the cybercriminals due to their weak security designs. To identify these vulnerable devices, existing approaches rely on the analysis of either real devices or their firmware images. These approaches, unfortunately, are difficult to scale in the highly fragmented IoT market due to the unavailability of firmware images and the high cost involved in acquiring real-world devices for security analysis.
 
@@ -437,7 +499,7 @@ The authors present a platform (Fig.\ref{fig:mirror}) that accelerates vulnerabl
 (1) app analysis: find the characteristics of a device by analyzing its companion app, and (2) cross-app analysis: find device families, i.e. cluster of devices, that have similarity in some of the characteristics found in app analysis by analyzing multiple apps. Clustering helps identify apps that have a similar set of vulnerabilities based on shared components.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{mirror.png} %
+    \includegraphics[width=0.9\linewidth]{mirror.png} %
     \caption{mirror's arch.}	
     \label{fig:mirror}
 \end{figure}
@@ -451,7 +513,7 @@ Another limitation of the approach is that the network interface analysis can be
 
 Another aspect to improve on is the dimension and granularity of the similarity analysis. Further improvements to the App Analysis Engine may allow the platform to detect similarities in finer components of a device software stack (e.g., web server, PHP interpreter, web application, OS, driver) as well as other dimensions (e.g., similar developer, similar development toolchain). This would enable us to track vulnerability propagation more comprehensively and accurately. 
 \newpage
-\section{PeriScope: An Effective Probing and Fuzzing Framework for the Hardware-OS Boundary @NDSS'19}
+\section{PeriScope: An Effective Probing and Fuzzing Framework for the Hardware-OS Boundary \\@NDSS'19}
 \subsection{Background/Problems}
 Currently, most of the kernel’s attack surface is situated along the system call boundary. Ongoing kernel protection efforts have focused primarily on securing this boundary.  However, there are additional paths to kernel compromise that do not involve system calls, as demonstrated by several recent exploits. For example, by compromising the firmware of a peripheral device such as a Wi-Fi chipset and subsequently sending malicious inputs from the Wi-Fi chipset to the Wi-Fi driver, adversaries have been able to gain control over the kernel without invoking a single system call. Unfortunately, there are currently no practical probing and fuzzing frameworks that can help developers find and fix such vulnerabilities occurring along the hardware-OS boundary.
 \subsection{Methods/Techniques}
@@ -475,7 +537,7 @@ Crashes in kernel space cause a system reboot, which significantly lowers the th
 Due to the significant latency involved in system restarts, whole-system fuzzers typically fuzz the system without restarting it between fuzzing iterations.  This can limit the effectiveness of such fuzzers, because the internal states of the target system persist across iterations.  Changing internal states can also lead to instability in the coverage-guidance, as the same input can exercise different code paths depending on the system state. This means that coverage-guidance may not be fully effective.  Existing device driver checkpointing and recovery mechanisms could be adapted to alleviate the problem [46], [70], because they provide mechanisms to roll drivers back to an earlier state. Such a roll back takes significantly less time than a full system reboot.
 \newpage
 
-\section{PARTEMU: Enabling Dynamic Analysis of Real-World TrustZone Software Using Emulation @Security'20}
+\section{PARTEMU: Enabling Dynamic Analysis of Real-World TrustZone Software Using Emulation \\@Security'20}
 \subsection{Background/Problems}
 ARM’s TrustZone technology is the basis for security of billions of devices worldwide, including Android smartphones and IoT devices. Because TrustZone has access to sensitive information such as cryptographic keys, access to TrustZone has been locked down on real-world devices: only code that is authenticated by a trusted party can run in TrustZone. A side-effect is that TrustZone software cannot be instrumented or monitored. Thus, recent advances in dynamic analysis techniques such as feedback-driven fuzz testing have not been applied to TrustZone software. Researchers have been restricted to primarily static reverse-engineering of binaries to find vulnerabilities in TrustZone software.
 \subsection{Methods/Techniques}
@@ -496,16 +558,16 @@ Hardware Roots of Trust. PARTEMU does not emulate hardware roots of trust. An ex
 Performance. Since they ran PARTEMU on an x86 machine, they could not take advantage of ARMv8 hardware virtualization. AFL ran at around 10-25 executions per second for QSEE, OP-TEE, and TEEGRIS, while their performance optimizations for Kinibi enabled 125 executions per second. Thus, a future work is to explore running PARTEMU directly on ARMv8 hardware.
 \newpage
 
-\section{Enhancing example-based code search with functional semantics @The Journal of Systems and Software'20}
+\section{Enhancing example-based code search with functional semantics \\@Journal of Systems and Software'20}
 \subsection{Background/Problems}
 As the quality and quantity of open source code increase, effective and efficient search for code implementing certain semantics, or semantics-based code search, has become an emerging need for software developers to retrieve and reuse existing source code. Previous techniques in semantics-based code search encode the semantics of loop-free Java code snippets as constraints and utilize an SMT solver to find encoded snippets that match an input/output (IO) query.
 \subsection{Methods/Techniques}
-The authors present in this article the Quebio approach to semantics-based search for Java methods. Quebio advances the state-of-the-art by supporting important language features like invocation to library APIs and enabling the search to handle more data types like array/List, Set, and Map. Compared with existing approaches, Quebio also integrates a customized keyword-based search that uses as the input a textual, behavioral summary of the desired methods to quickly prune the methods to be checked against the IO examples.
+The authors present in this article the Quebio approach to semantics-based search for Java methods (Fig.\ref{fig:quebio}). Quebio advances the state-of-the-art by supporting important language features like invocation to library APIs and enabling the search to handle more data types like array/List, Set, and Map. Compared with existing approaches, Quebio also integrates a customized keyword-based search that uses as the input a textual, behavioral summary of the desired methods to quickly prune the methods to be checked against the IO examples.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=.9\linewidth]{codesearch_semantic_based.png} %
+    \includegraphics[width=.9\linewidth]{quebio.jpg} %
     \caption{semantics-based search for Java method using IO examples}	
-    \label{fig:codesearch_semantic_based}
+    \label{fig:quebio}
 \end{figure}
 \subsection{Results/Evaluation}
 conducted experiments on 47 queries based on real-world questions from programmers to evaluate our approach. The approach was able to find correct methods from a pool of 14,792 candidates for 43 of the queries, spending on average 213.2 seconds on each query. Such results suggest our approach is both effective and efficient.
@@ -513,7 +575,7 @@ conducted experiments on 47 queries based on real-world questions from programme
 A threat to external validity concerns the limited data types that Quebio supports in its current implementation.While Quebio has the ability to handle API calls in candidate methods, the availability and the complexity of logical formulas encoding those APIs’ semantics can present challenges to Quebio in achieving similar levels of effectiveness and efficiency on other queries. In the future, we plan to extend Quebio to support more data types.
 \newpage
 
-\section{Active Inductive Logic Programming for Code Search @ICSE'20}
+\section{Active Inductive Logic Programming for Code Search \\@ICSE'20}
 \subsection{Background/Problems}
 Modern search techniques either cannot efficiently incorporate human feedback to refine search results or cannot express structural or semantic properties of desired code.
 \subsection{Methods/Techniques}
@@ -521,24 +583,25 @@ The authors present in this article the Quebio approach to semantics-based searc
 
 \subsection{Results/Evaluation}
 On average, ALICE successfully identifies similar code locations with 93\% precision and 96\% recall in 2.7 search iterations. ALICE achieves 100\% precision and 97\% recall in the first dataset, while it achieves 75\% precision and 94\% recall in the second dataset. The reason is that the second dataset contains code fragments that loop over a double array with no write to output operations, which is a semantic constraint imposed by Casper [20] for loop optimization. However, ALICE does not learn predicates that differentiate read and write operations on an array and therefore returns a large number of code fragments that write double arrays in a loop, which leads to low precision.
+
 compare with critics:
 In six out of seven cases, ALICE achieves the same or better precision and recall with fewer iterations to converge, compared to Critics. In ID 4, ALICE has low precision because the expected code contains a switch statement, which is currently not extracted by ALICE as a logic fact. Extending current logic predicates to support more syntactic constructs remain as future work.
 \subsection{Limitations/Comments}
 we generate facts based on structural and intra-procedural control flow properties. Other types of analysis such as dataflow analysis or aliasing analysis could be used in identifying similar snippets. In addition, the query language itself can be extended to make it easier to capture the properties of desired code. For example, by introducing negations in the query language,a user can specify atoms that should not be included. There could be specializations that strictly require negations. However, in our experiments, empirically, we are always able to find a pattern without negations. As mentioned in Section III-D, our learning process is monotonic and to learn a different query, a user may need to start over. To overcome this, we may need backtracking and investigate new search algorithms that generalize and specialize the query in a different way.
 \newpage
 
-\section{LTRWES:A new framework for security bug report detection @Information and Software Technology'20}
+\section{LTRWES:A new framework for security bug report detection \\@Information and Software Technology'20}
 \subsection{Background/Problems}
-it is important to identify SBRs quickly and accurately among bug reports (BRs) that have been disclosed in bug tracking systems.Although a few methods have been already proposed for the detection of SBRs, challenging issues still remain due to noisy samples, class imbalance and data scarcity.
+It is important to identify SBRs quickly and accurately among bug reports (BRs) that have been disclosed in bug tracking systems. Although a few methods have been already proposed for the detection of SBRs, challenging issues still remain due to noisy samples, class imbalance and data scarcity.
 \subsection{Methods/Techniques}
-LTRWES is a content-based data filtering and representation framework that has several desirable properties not shared in other methods. 
+LTRWES is a content-based data filtering and representation framework that has several desirable properties not shared in other methods (Fig.\ref{fig:ltrwes}). 
 Firstly, it exploits ranking model to efficiently filter non-security bug reports (NSBRs) that have higher content similarity with respect to SBRs. 			
-Secondly, it applies word embedding technology to transform the rest of NSBRs, together with SBRs, into low-dimensional real-value vectors
+Secondly, it applies word embedding technology to transform the rest of NSBRs, together with SBRs, into low-dimensional real-value vectors.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=.9\linewidth]{security_bug_report_detection.png} %
+    \includegraphics[width=\linewidth]{ltrwes.jpg} %
     \caption{the general framework of security bug report detection}	
-    \label{fig:security_bug_report_detection}
+    \label{fig:ltrwes}
 \end{figure}
 \subsection{Results/Evaluation}
 The highest g-measure for each project is obtained by LTRWES. LTRWES outperforms FARSEC on average by 16.7\% and 22.4\% in gmeasure for WPSP and CPSP respectively. 
@@ -553,9 +616,9 @@ Our future work includes:
 \end{itemize}
 \newpage
 
-\section{Search-Based Test and Improvement of Machine-Learning-Based Anomaly Detection Systems @ISSTA'19}
+\section{Search-Based Test and Improvement of Machine-Learning-Based Anomaly Detection Systems \\@ISSTA'19}
 \subsection{Background/Problems}
-the live learning mechanism,progressively injecting small portions of abnormal data. swift the learned states to a point where harmful data can pass unnoticed.
+The live learning mechanism, progressively injecting small portions of abnormal data. Swift the learned states to a point where harmful data can pass unnoticed.
 \subsection{Methods/Techniques}
 \begin{itemize}
 	\item \textbf{Search-Based Test of IDS(intrusion detection systems):}
@@ -563,7 +626,7 @@ the live learning mechanism,progressively injecting small portions of abnormal d
           --Fitness function;(the distance between target and the closest cluster centroid and minimizing the consumed time budget)\\
          --Selectors ( keeps the best individuals out of samples of three)\\
          --alterers(single-point crossover with a 0.2 recombination probability, while gene mutation in the offspring occurs with a probability of 0.15)
-    \item \textbf{Search-Based Improvement of IDS:}
+	\item \textbf{Search-Based Improvement of IDS:}
           --Genotype;\\
           --Fitness function(fastest detection time, minimizing resources);\\
           --Selectors and alterers
@@ -581,13 +644,13 @@ the live learning mechanism,progressively injecting small portions of abnormal d
 \end{itemize}
 \newpage
 
-\section{Codebase-adaptive detection of security-relevant methods @ISSTA'19}
+\section{Codebase-adaptive detection of security-relevant methods \\@ISSTA'19}
 \subsection{Background/Problems}
-users must configure the static tools with lists of security-relevant methods (Srm) that are relevant to their development context.aids analysis users in detecting Srm.
+Users must configure the static tools with lists of security-relevant methods (Srm) that are relevant to their development context.aids analysis users in detecting Srm.
 \subsection{Methods/Techniques}
 \begin{itemize}
 	\item \textbf{Features:} uses a set of binary features that evaluate certain properties of the methods, constructs a feature matrix; identified 25 feature types, instantiated as 206 concrete features, \textbf{Classifiers:} Support Vector Machine (SVM), Bayes Net, Naive Bayes, Logistic Regression, C4.5, Decision Stump, and Ripper.
-  \item  take user feedback into account, allowing developers to adapt SWAN to the code base.
+	\item  take user feedback into account, allowing developers to adapt SWAN to the code base.
 \end{itemize}
 
 \subsection{Results/Evaluation}
@@ -599,7 +662,7 @@ It is possible to improve the precision of static analyses by providing more gra
 (i.e., which parameter, static variable, return variable, or base object). Additionally, we plan to extend SWAN and SWANAssist to support a larger number of CWEs. We also plan to improve SWAN’ training set in a more systematic manner, to ensure a better precision of the approach, and develop a better strategy to handle potentially problematic methods in SuggestSWAN.
 \newpage
 
-\section{P2IM: Scalable and Hardware-independent Firmware Testing via Automatic Peripheral Interface Modeling @Security'20}
+\section{P2IM: Scalable and Hardware-independent Firmware Testing via Automatic Peripheral Interface Modeling \\@Security'20}\label{p2im}
 \subsection{Background/Problems}
 Software vulnerabilities cause the majority of attacks on MCU devices, resulting in not only digital but also physical damages. Dynamic testing or fuzzing of embedded firmware is severely limited by hardware-dependence and poor scalability, partly contributing to the widespread vulnerable IoT devices. There are four open challenges that prevent fuzzers for computer software from being effective on firmware: Hardware Dependence; Wide Range of Peripherals; Diverse OS/System Designs; Incompatible Fuzzing Interfaces.
 \subsection{Methods/Techniques}
@@ -608,7 +671,7 @@ The authors design a framework that supports fuzzers as drop-in components to te
 The approach is novel in that it neither relies on any hardware nor emulates peripherals. They introduce a form of approximate MCU emulation for supporting firmware testing and fuzzing. More importantly, they provide a method to automatically generate approximate emulators based on firmware binaries. The approach is inspired by the observation that firmware can execute on an emulator without real or fully emulated peripherals, as long as the emulator provides the firmware with acceptable inputs from peripherals when needed. Such inputs do not have to be the same as what a real peripheral would produce. But they do need to pass firmware’s internal checks to avoid disrupting firmware execution. For a given firmware, their approximate emulator uses a generic processor/ISA emulator (e.g., one for ARM Cortex-M) and a model, automatically built for the firmware, that captures what constitutes an acceptable input for each peripheral accessed by the firmware.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=.8\linewidth]{p2im.png} %
+    \includegraphics[width=.8\linewidth]{fig-p2im} %
     \caption{P2IM's workflow.}	
     \label{fig:p2im}
 \end{figure}
@@ -623,7 +686,7 @@ They analyzed 3 MCUs that use non-ARM architectures for IoT devices: ATmega328P 
 
 Other types of dynamic firmware analysis that do not require fully accurate output from firmware can use the framework to achieve hardware-independence and scalability. For instance, data or code reachability analysis, such as taint analysis and certain debugging tasks, can benefit from their framework. In particular, concolic firmware execution can use their framework to generate more realistic concrete inputs (i.e., non-crashing/stalling), reduce the number of symbolic values, and avoid some infeasible code paths.
 \newpage
-\section{HALucinator: Firmware Re-hosting Through Abstraction Layer Emulation @Security'20}
+\section{HALucinator: Firmware Re-hosting Through Abstraction Layer Emulation \\@Security'20}
 \subsection{Background/Problems}
 Given the increasing ubiquity of online embedded devices, analyzing their firmware is important to security, privacy, and safety. The tight coupling between hardware and firmware and the diversity found in embedded systems makes it hard to perform dynamic analysis on firmware.
 \subsection{Methods/Techniques}
@@ -646,7 +709,7 @@ HALucinate requires the firmware use a HAL, and the HAL must be available to the
 
 The effectiveness of LibMatch, especially when the compiler or library versions used is unknown, is limited. This limitation comes from function matching techniques’ inability to cope with compiler-induced variations in generated code. 
 \newpage
-\section{KOOBE: Towards Facilitating Exploit Generation of Kernel Out-Of-Bounds Write Vulnerabilities @Security'20}
+\section{KOOBE: Towards Facilitating Exploit Generation of Kernel Out-Of-Bounds Write Vulnerabilities \\@Security'20}
 \subsection{Background/Problems}
 The monolithic nature of modern OS kernels leads to a constant stream of bugs being discovered. It is often unclear which of these bugs are worth fixing, as only a subset of them may be serious enough to lead to security takeovers (i.e., privilege escalations). Therefore, researchers have recently started to develop automated exploit generation techniques (for UAF bugs) to assist the bug triage process. 
 \subsection{Methods/Techniques}
@@ -673,7 +736,7 @@ KOOBE does not yet produce an end-to-end exploit fully automatically. Through th
 Although they only consider defenses deployed in practice in this work, some fine-grained randomization based defenses [3, 14, 42] would break some of their assumptions in generating exploits (e.g., DieHard [14] and SLAB/SLUB freelist randomization [3] make heap feng shui much less predictable). Nevertheless, they believe such defenses are not bulletproof. For example, randomization-based solutions could potentially be circumvented by CPU side channels that can be integrated into Koobe.  
 \newpage
 
-\section{Multi-Modal Attention Network Learning for Semantic Source Code Retrieval @ASE'2019}
+\section{Multi-Modal Attention Network Learning for Semantic Source Code Retrieval \\@ASE'2019}
 \subsection{Background/Problems}
 The paper is motivated by a paper  “Deep code search,” in ICSE‘2018. \\
 Code retrieval techniques and tools have been playing a key role in facilitating software developers to retrieve existing code fragments from available open-source repositories given a user query (e.g., a short natural language text describing the functionality for retrieving a particular code snippet). However, two main issues hinder them to accurately retrieve satisfiable code fragments from largescale repositories when answering complicated queries. First, the existing approaches only consider shallow features of source code such as method names and code tokens, but ignoring structured features such as abstract syntax trees (ASTs) and control-flow graphs (CFGs) of source code, which contains rich and welldefined semantics of source code. Second, although the deep learning-based approach performs well on the representation of source code, it lacks the explainability, making it hard to interpret the retrieval results and almost impossible to understand which features of source code contribute more to the final results.
@@ -694,7 +757,7 @@ Another limitation lies in the extensibility of our proposed approach. Our model
 
 Future work: 1)conduct comprehensive experiments on other dataset of different language such as Java or Python, as well as human evaluation to further verify the effectiveness of our proposed approach.  2)it’s promising to explore the potentiality of multimodal code representation on some other software engineering tasks such as code summarization and code clone detection.
 \newpage
-\section{Scalable and Practical Locking with Shuffling @SOSP'2019 }
+\section{Scalable and Practical Locking with Shuffling \\@SOSP'2019 }
 \subsection{Background/Problems}
 Locks are an essential building block for high-performance multicore system software. To meet performance goals, lock algorithms have evolved towards specialized solutions for architectural characteristics (e.g., NUMA). However, in practice, applications run on different server platforms and exhibit widely diverse behaviors that evolve with time (e.g., number of threads, number of locks). This creates performance and scalability problems for locks optimized for a single scenario and platform. For example, popular spinlocks suffer from excessive cache-line bouncing in NUMA systems, while scalable, NUMA-aware locks exhibit sub-par single-thread performance.
 
@@ -712,7 +775,7 @@ We then propose a new technique, shuffling (Fig. \ref{fig:shfllock}), that can d
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{shfllock.png} %
+    \includegraphics[width=0.7\linewidth]{shfllock.png} %
     \caption{shflLock's example.}	
     \label{fig:shfllock}
 \end{figure}
@@ -725,4 +788,52 @@ The evaluation shows that our family of locks based on shuffling improves the th
 \item Shuffling can also be beneficial in designing an adaptive readers-writer lock, in which a waiter switches among centralized, per-socket or per-CPU reader indicators, depending on workload and thread contention.
 \end{itemize}
 \newpage
+\section{Typestate-guided fuzzer for discovering UAF vulnerabilities \\@ICSE'20}
+\subsection{Background/Problems}
+Existing coverage-based fuzzers usually use the individual control flow graph (CFG) edge coverage to guide the fuzzing process, which has shown great potential in finding vulnerabilities. However, CFG edge coverage is not effective in discovering vulnerabilities such as use-after-free (UaF). This is because, to trigger UaF vulnerabilities, one needs not only to cover individual edges, but also to traverse some (long) sequence of edges in a particular order, which is challenging for existing fuzzers.
+\subsection{Methods/Techniques}
+The authors propose to model UaF vulnerabilities as typestate properties, and develop a typestate-guided fuzzer (Fig.\ref{fig:uafl}), named UAFL, for discovering vulnerabilities violating typestate properties. Given a typestate property, they first perform a static typestate analysis to find operation sequences potentially violating the property. The fuzzing process is then guided by the operation sequences in order to progressively generate test cases triggering property violations. In addition, they also employ an information flow analysis to improve the efficiency of the fuzzing process. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{uafl.jpg} %
+    \caption{Workflow of UAFL.}	
+    \label{fig:uafl}
+\end{figure}
+\subsection{Results/Evaluation}
+They performed a thorough evaluation of UAFL on 14 widely-used real-world programs. The experiment results show that UAFL substantially outperforms the state-of-the-art fuzzers, including AFL, AFLFast, FairFuzz, MOpt, Angora and QSYM, in terms of the time taken to discover vulnerabilities. They discovered 10 previously unknown vulnerabilities, and received 5 new CVEs.
+\subsection{Limitations/Comments}
+ Due to the high expressiveness of typestate property, their approach can be extended to detect other types of vulnerabilities. For example, we can extend UAFL to detect API-misuse [2], e.g., file read/write operations by customizing the typestate property. 
+\newpage
+
+\section{Jetset: Targeted Firmware Rehosting for Embedded Systems \\@Security'21}
+\subsection{Background/Problems}
+The ability to execute code in an emulator is a fundamental part of modern vulnerability testing. Unfortunately, this poses a challenge for many embedded systems, where firmware expects to interact with hardware devices specific to the target.  Getting embedded system firmware to run outside its native environment, termed \emph{rehosting}, requires emulating these hardware devices with enough accuracy to convince the firmware that it is executing on the target hardware. However, full fidelity emulation of target devices (which requires considerable engineering effort) may not be necessary to boot the firmware to a point of interest for an analyst (for example, a point where fuzzer input can be injected). We hypothesized that, for the firmware to boot successfully, it is sufficient to emulate only the behavior expected by the firmware, and that this behavior could be inferred automatically. 
+
+To test this hypothesis, we developed and implemented Jetset, a system that uses symbolic execution to infer what behavior firmware expects from a target device. Jetset can generate devices models for hardware peripherals in C, allowing an analyst to boot the firmware in an emulator (e.g., QEMU). 
+\subsection{Methods/Techniques}
+Jetset requires the following information about the target embedded system.
+\begin{itemize}
+\item The executable code of the target, usually read out of program flash or extracted from a firmware update provided by a manufacturer.
+\item The memory layout of the target, specifying which regions of the address space are mapped to program memory, RAM, and device I/O registers. This information can be obtained from the datasheet of a single-chip system or from a basic analysis of the executable code. Note that Jetset does not need to know which devices are mapped where, only the address range used for MMIO.
+\item The entry point address where execution begins. This is often specified in the CPU datasheet.
+\item The program goal address that the analyst wants the program to reach. For example, this can be the address of a print instruction that reports a successful system boot.
+\end{itemize}
+There are two stages of Jetset operation: peripheral inference and peripheral synthesis. In the inference stage, Jetset uses symbolic execution to infer expected device behavior.  Then, in the synthesis stage, the output of the inference stage is used to create a device suitable for use in an emulator (e.g., QEMU).
+
+{\color{blue}To mitigate the states explosion, Jetset exploits guided symbolic execution using a search strategy based on incremental control-flow graph construction.  Jetset periodically injects interrupts during symbolic execution, so that each ISR is executed periodically during each execution path. }
+
+There are two key differences between P2IM’s fuzzing based approach (Paper: \ref{p2im}), and Jetset’s directed symbolic execution based approach. The first difference is that unlike P2IM, Jetset is targeted—it is designed to ignore most paths through the firmware to focus on a particular target piece of code, which allows it boot deep into large pieces of firmware. While Feng et al. showed P2IM’s approach is effective at fuzzing peripheral handling code and emulating microcontroller code, it is not clear whether it scales to larger firmware.  The second difference is that, while fuzzing-based approaches are efficient since they use lightweight executions, they can have trouble bypassing complex checks. Jetset is able to handle complex numerical checks, because it performs partial rehosting using symbolic execution.
+\subsection{Results/Evaluation}
+We successfully applied Jetset to 13 distinct pieces of firmware together representing 3 architectures, 3 application domains (power grid, avionics, and consumer electronics), and 5 different operating systems. We also demonstrate how Jetset-assisted rehosting facilitates fuzzing, a common security analysis technique, on an avionics embedded system, in which we found a previously unknown privilege escalation vulnerability. Available at: \url{https://jetset.aerosec.org}.
+\subsection{Limitations/Comments}
+\begin{description}
+\item[Path correctness.] Jetset has no knowledge of the underlying hardware other than the behavior that is observable to the CPU. The path taken through firmware is not necessarily one that may ever be returned by the hardware; however, the path taken is one that is acceptable to the firmware—no interaction with any of the peripherals results in a boot failure. While the execution of firmware running on physical hardware is constrained in its behavior by how the physical peripherals really behave, these system constraints are external to the firmware and cannot be inferred without auxiliary information about its behavior. 
+
+\item[Limited peripheral model.] Jetset does targeted rehosting in that it only constructs an emulator that is sufficient to emulate the software component-under-test. If the firmware reads from a peripheral’s address after reaching the target, Jetset replays the last satisfying value read from that address. In our tests, we found that this simple model is sufficient to perform useful analysis and bug finding (as shown in Section 6); however, more complex interactions with the peripherals may not be emulated correctly.  
+Another limitation of Jetset’s peripheral model is that Jetset has no understanding of the semantics of the devices synthesized besides what is needed to guide the firmware towards the target address. We found that our limited peripheral model caused the firmware to crash after reaching the target address in one case. In the BeagleBoard-xM, we found that our emulator attempted to execute data loaded from a serial boot from our synthetic device. Jetset had no method to detect that the data it is returning from device reads should be valid ARM code, and crashed because of it.  In future work, we plan to have Jetset synthesize more complex, stateful peripheral models as well as identify known peripherals with existing emulator implementations.
+
+\item[No DMA support.] Jetset does not support devices that perform direct memory access (DMA) to normal RAM. This is because DMA is not observable by firmware since the device accesses memory without the assistance of the CPU. In the two cases that DMA was required to boot the firmware-under-test, we either left the DMA device in the QEMU model (as described in 6.2) or manually marked the DMA region symbolic (as in the Robot firmware in 6.6). We leave automated modeling of DMA to future work.
+\end{description}
+\newpage
+
 \end{document}
