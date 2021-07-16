@@ -1,3 +1,3 @@
-# hodgepodge
+# Reading Notes
  
-Reading notes of papers.
+Reading notes written by *TSISers*, focusing on trustworthy software and intelligent systems.
